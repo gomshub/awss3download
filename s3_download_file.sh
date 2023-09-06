@@ -57,4 +57,46 @@ except Exception as e:
 
 Make sure to replace `'bucket-name'` with the actual name of your S3 bucket and `'file-pattern'` with the pattern you want to match for the file names.
 
+python
+import boto3
+import os
+import fnmatch
+
+# Set up the AWS credentials and region
+session = boto3.Session(
+    aws_access_key_id='YOUR_ACCESS_KEY',
+    aws_secret_access_key='YOUR_SECRET_KEY',
+    region_name='YOUR_REGION'
+)
+
+# Create an S3 client
+s3 = session.client('s3')
+
+# Specify the S3 bucket name
+bucket_name = 'your-bucket-name'
+
+# Specify the filename pattern
+filename_pattern = '*.txt'  # Example: Download all files with a .txt extension
+
+# List objects in the bucket
+response = s3.list_objects_v2(Bucket=bucket_name)
+
+# Download files matching the filename pattern
+for obj in response['Contents']:
+    key = obj['Key']
+    if fnmatch.fnmatch(key, filename_pattern):
+        # Extract the filename from the key
+        filename = os.path.basename(key)
+        
+        # Download the file
+        s3.download_file(bucket_name, key, filename)
+        print(f"Downloaded file: {filename}")
+
+
+
+
+
+
+
+
 This script first lists all objects in the S3 bucket using the `list_objects_v2` API. It then filters the objects based on the specified file pattern. The filtered objects are sorted based on the most recent modified date using the `LastModified` property obtained from the `head_object` API call. Finally, the script prints the most recent file that matches the file pattern.
