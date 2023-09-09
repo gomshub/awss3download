@@ -46,4 +46,37 @@ desired_date = '2023-09-01'
 get_file_by_date(bucket_name, desired_date)
 
 
+python
+import boto3
+from datetime import datetime
+
+def download_and_sort_s3_files(bucket_name, file_pattern):
+    # Create an S3 client
+    s3 = boto3.client('s3')
+
+    # List objects in the bucket
+    response = s3.list_objects_v2(Bucket=bucket_name)
+
+    # Filter and sort the objects based on last modified date
+    files = []
+    for obj in response['Contents']:
+        if obj['Key'].endswith(file_pattern):
+            files.append(obj)
+
+    files.sort(key=lambda x: x['LastModified'])
+
+    # Download the selected files
+    for file in files:
+        file_name = file['Key']
+        s3.download_file(bucket_name, file_name, file_name)
+        last_modified = file['LastModified'].strftime("%Y-%m-%d %H:%M:%S")
+        print(f"Downloaded file: {file_name}, Last Modified: {last_modified}")
+
+    print("Files downloaded and sorted successfully.")
+
+# Provide your S3 bucket name and file pattern
+bucket_name = 'your_bucket_name'
+file_pattern = '.txt'  # File pattern to filter files, e.g., '.txt' for text files
+
+download_and_sort_s3_files(bucket_name, file_pattern)
 
