@@ -112,3 +112,23 @@ for page in page_iterator:
         print("No files found with the specified pattern prefix.")
 
 
+dockerfile
+FROM ubuntu:latest
+
+# Install SSH server
+RUN apt-get update && apt-get install -y openssh-server
+
+# Enable copy-paste functionality
+RUN echo "PermitUserEnvironment yes" >> /etc/ssh/sshd_config
+RUN echo "X11UseLocalhost no" >> /etc/ssh/sshd_config
+RUN echo "X11Forwarding yes" >> /etc/ssh/sshd_config
+
+# Set up user for SSH access
+RUN useradd -m testuser && echo "testuser:testpassword" | chpasswd
+RUN usermod --shell /bin/bash testuser
+
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH server
+CMD ["/usr/sbin/sshd", "-D"]
