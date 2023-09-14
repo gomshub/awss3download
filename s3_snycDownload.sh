@@ -80,3 +80,35 @@ file_pattern = '.txt'  # File pattern to filter files, e.g., '.txt' for text fil
 
 download_and_sort_s3_files(bucket_name, file_pattern)
 
+
+
+
+python
+import boto3
+import fnmatch
+
+bucket_name = 'your_bucket_name'
+prefix_pattern = 'Abc*'
+
+# Create an S3 client
+s3 = boto3.client('s3')
+
+# Set the initial parameters for pagination
+paginator = s3.get_paginator('list_objects_v2')
+page_iterator = paginator.paginate(Bucket=bucket_name)
+
+# Retrieve the files matching the pattern prefix
+for page in page_iterator:
+    if 'Contents' in page:
+        for obj in page['Contents']:
+            # Get the object key
+            object_key = obj['Key']
+            # Check if the key matches the pattern prefix
+            if fnmatch.fnmatch(object_key, prefix_pattern):
+                # Download the file
+                s3.download_file(bucket_name, object_key, object_key)
+                print(f"Downloaded file: {object_key}")
+    else:
+        print("No files found with the specified pattern prefix.")
+
+
