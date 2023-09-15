@@ -112,6 +112,20 @@ Implementing Continuous Integration and Continuous Deployment (CI/CD) for the Ne
 
 Overall, implementing CI/CD for the Neoxam application can streamline software delivery, improve code quality, enhance collaboration, and provide a more efficient and reliable development process.
 
+To set up LDAP for a Swing application, you would typically follow these steps:
 
+1. **Choose an LDAP server**: Decide on an LDAP server to use, such as OpenLDAP or Microsoft Active Directory. Install and configure the server according to your requirements.
+
+2. **Add LDAP libraries**: Include the necessary LDAP libraries in your Swing application's classpath. These libraries provide the APIs required to communicate with the LDAP server. For example, you can use the Java Naming and Directory Interface (JNDI) API provided by Java.
+
+3. **Establish a connection**: In your Swing application, establish a connection to the LDAP server using the appropriate connection details, such as server address, port, and credentials. This typically involves creating an instance of the LDAP context.
+
+4. **Perform LDAP operations**: Once connected, you can perform various LDAP operations, such as searching for entries, adding or modifying entries, and deleting entries. These operations involve constructing LDAP queries and using the LDAP API to execute them against the server.
+
+5. **Handle responses**: Process the responses received from the LDAP server, such as search results or success/failure indications for add/modify/delete operations. You can extract the required information from the LDAP responses and update your Swing application accordingly.
+
+6. **Close the connection**: When you're done using the LDAP server, make sure to close the connection to release any resources. This typically involves calling the appropriate method to close the LDAP context.
+
+It's important to note that implementing LDAP functionality in a Swing application can be complex, and it's recommended to refer to the documentation and examples provided by your LDAP server and LDAP library to understand the specific details and APIs involved.
 
 This script first lists all objects in the S3 bucket using the `list_objects_v2` API. It then filters the objects based on the specified file pattern. The filtered objects are sorted based on the most recent modified date using the `LastModified` property obtained from the `head_object` API call. Finally, the script prints the most recent file that matches the file pattern.
