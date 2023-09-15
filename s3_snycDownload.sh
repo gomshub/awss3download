@@ -132,3 +132,26 @@ EXPOSE 22
 
 # Start SSH server
 CMD ["/usr/sbin/sshd", "-D"]
+
+
+
+Sure, here's a brief introduction to CI/CD (Continuous Integration/Continuous Deployment) that you can include in a slide presentation:
+
+Slide Title: Introduction to CI/CD
+
+Slide Content:
+- CI/CD stands for Continuous Integration/Continuous Deployment.
+- It is a software development practice that aims to automate the build, test, and deployment of applications.
+- The primary goal of CI/CD is to deliver software changes to production quickly and reliably.
+- Continuous Integration focuses on merging code changes from multiple developers into a shared repository frequently.
+- It involves automating the process of building and testing the application to catch integration issues early.
+- Continuous Deployment takes CI a step further by automatically deploying the application to production after successful testing.
+- With CI/CD, teams can release new features, bug fixes, and improvements more frequently, reducing time-to-market.
+- It enhances collaboration, as developers can work on different features simultaneously, knowing that their changes will integrate smoothly.
+- CI/CD also promotes a culture of automation, quality assurance, and rapid feedback loops.
+- It relies on the use of various tools and technologies such as version control systems, build servers, and deployment pipelines.
+- By adopting CI/CD, organizations can achieve faster development cycles, improved software quality, and increased customer satisfaction.
+
+Feel free to customize the content and design of the slide according to your needs.
+
+
