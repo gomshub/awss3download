@@ -128,4 +128,43 @@ To set up LDAP for a Swing application, you would typically follow these steps:
 
 It's important to note that implementing LDAP functionality in a Swing application can be complex, and it's recommended to refer to the documentation and examples provided by your LDAP server and LDAP library to understand the specific details and APIs involved.
 
+Certainly! Here's a shell script that can help you compute the previous business date:
+
+```shell
+#!/bin/bash
+
+# Function to check if a given date is a weekend (Saturday or Sunday)
+is_weekend() {
+    local day_of_week=$(date -d "$1" +%u)
+    if [[ $day_of_week == 6 || $day_of_week == 7 ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to compute the previous business date
+previous_business_date() {
+    local date_str=$1
+    while is_weekend "$date_str"; do
+        date_str=$(date -d "$date_str -1 day" +%Y-%m-%d)
+    done
+    echo "$date_str"
+}
+
+# Usage example
+current_date=$(date +%Y-%m-%d)
+previous_biz_date=$(previous_business_date "$current_date")
+echo "Previous business date: $previous_biz_date"
+```
+
+Save the above script to a file, let's say `previous_biz_date.sh`. Make it executable by running `chmod +x previous_biz_date.sh`. Then, you can run it by executing `./previous_biz_date.sh`.
+
+The script uses the `date` command to check if a given date is a weekend, and if so, it subtracts one day until it finds a non-weekend date. Finally, it prints the previous business date.
+
+I hope this helps! Let me know if you have any further questions.
+
+
+
+
 This script first lists all objects in the S3 bucket using the `list_objects_v2` API. It then filters the objects based on the specified file pattern. The filtered objects are sorted based on the most recent modified date using the `LastModified` property obtained from the `head_object` API call. Finally, the script prints the most recent file that matches the file pattern.
