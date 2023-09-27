@@ -210,5 +210,24 @@ create_subfolders(bucket_name, subfolder_path)
 
 
 
+python
+import boto3
+
+def create_subfolders(bucket_name, subfolder_paths):
+    s3_client = boto3.client('s3')
+    
+    for subfolder_path in subfolder_paths:
+        # Append a trailing slash to the subfolder path if it doesn't exist
+        if not subfolder_path.endswith('/'):
+            subfolder_path += '/'
+        
+        # Create a placeholder object to represent the subfolder
+        s3_client.put_object(Bucket=bucket_name, Key=subfolder_path)
+    
+# Example usage
+bucket_name = 'your-bucket-name'
+subfolder_paths = ['subfolder1/', 'subfolder2/', 'subfolder3/']
+
+create_subfolders(bucket_name, subfolder_paths)
 
 
