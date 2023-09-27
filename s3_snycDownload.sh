@@ -155,3 +155,35 @@ Slide Content:
 Feel free to customize the content and design of the slide according to your needs.
 
 
+python
+import gzip
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+import boto3
+
+def unzip_and_convert_to_parquet(gz_file_path, s3_bucket, s3_key):
+    # Unzip .gz file and read contents as text
+    with gzip.open(gz_file_path, 'rb') as gz_file:
+        text_data = gz_file.read().decode('utf-8')
+
+    # Create a DataFrame from the text data
+    df = pd.DataFrame({'data': [text_data]})
+
+    # Convert DataFrame to Parquet file
+    table = pa.Table.from_pandas(df)
+    pq.write_table(table, 'temp.parquet')
+
+    # Upload Parquet file to S3
+    s3_client = boto3.client('s3')
+    s3_client.upload_file('temp.parquet', s3_bucket, s3_key)
+
+    # Remove the temporary Parquet file
+    os.remove('temp.parquet')
+
+# Example usage
+gz_file_path = 'your-file.gz'
+s3_bucket = 'your-s3-bucket'
+s3_key = 'your-s3-key.parquet'
+
+unzip_and_convert_to_parquet(gz_file_path, s3_bucket, s3_key)
