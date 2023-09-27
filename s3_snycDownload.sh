@@ -187,3 +187,28 @@ s3_bucket = 'your-s3-bucket'
 s3_key = 'your-s3-key.parquet'
 
 unzip_and_convert_to_parquet(gz_file_path, s3_bucket, s3_key)
+
+
+python
+import boto3
+
+def create_subfolders(bucket_name, subfolder_path):
+    s3_client = boto3.client('s3')
+    
+    # Append a trailing slash to the subfolder path if it doesn't exist
+    if not subfolder_path.endswith('/'):
+        subfolder_path += '/'
+    
+    # Create a placeholder object to represent the subfolder
+    s3_client.put_object(Bucket=bucket_name, Key=subfolder_path)
+    
+# Example usage
+bucket_name = 'your-bucket-name'
+subfolder_path = 'your/subfolder/path/'
+
+create_subfolders(bucket_name, subfolder_path)
+
+
+
+
+
