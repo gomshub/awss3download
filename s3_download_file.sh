@@ -165,6 +165,33 @@ The script uses the `date` command to check if a given date is a weekend, and if
 I hope this helps! Let me know if you have any further questions.
 
 
+python
+import boto3
+
+def list_subfolders(bucket_name, prefix):
+    s3_client = boto3.client('s3')
+    response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+    
+    subfolders = []
+    if 'CommonPrefixes' in response:
+        subfolders = [obj['Prefix'] for obj in response['CommonPrefixes']]
+    
+    return subfolders
+
+# Example usage
+bucket_name = 'your-bucket-name'
+prefix = 'your-folder-prefix/'
+
+subfolders = list_subfolders(bucket_name, prefix)
+print(subfolders)
+
+
+
+
+
+
+
+
 
 
 This script first lists all objects in the S3 bucket using the `list_objects_v2` API. It then filters the objects based on the specified file pattern. The filtered objects are sorted based on the most recent modified date using the `LastModified` property obtained from the `head_object` API call. Finally, the script prints the most recent file that matches the file pattern.
