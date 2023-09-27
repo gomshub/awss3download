@@ -230,4 +230,22 @@ subfolder_paths = ['subfolder1/', 'subfolder2/', 'subfolder3/']
 
 create_subfolders(bucket_name, subfolder_paths)
 
+python
+import os
+import boto3
+
+def upload_files_to_s3(bucket_name, directory_path):
+    s3_client = boto3.client('s3')
+
+    for root, dirs, files in os.walk(directory_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            s3_key = os.path.relpath(file_path, directory_path)
+            s3_client.upload_file(file_path, bucket_name, s3_key)
+
+# Example usage
+bucket_name = 'your-bucket-name'
+directory_path = '/path/to/your/directory'
+
+upload_files_to_s3(bucket_name, directory_path)
 
