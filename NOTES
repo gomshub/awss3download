@@ -165,6 +165,27 @@ subfolders = list_subfolders(bucket_name, prefix)
 print(subfolders)
 
 
+python
+import boto3
+
+s3 = boto3.client('s3')
+
+def list_subfolders(bucket_name, prefix):
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+
+    subfolders = []
+    for common_prefix in response.get('CommonPrefixes', []):
+        subfolder_path = common_prefix['Prefix']
+        subfolder_name = subfolder_path.strip('/').split('/')[-1]
+        subfolders.append(subfolder_name)
+
+    return subfolders
+
+bucket_name = 'your_bucket_name'
+prefix = 'your_parent_folder/subfolder/'
+
+subfolders = list_subfolders(bucket_name, prefix)
+print(subfolders)
 
 
 
