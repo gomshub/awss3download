@@ -188,4 +188,23 @@ subfolders = list_subfolders(bucket_name, prefix)
 print(subfolders)
 
 
+bash
+#!/bin/bash
+
+# Set the directory to list files from
+directory="/path/to/directory"
+
+# Iterate over files in the directory
+for file in "$directory"/*
+do
+  # Check if the file is a regular file
+  if [ -f "$file" ]
+  then
+    # Get the file's generated date
+    generated_date=$(stat -c %y "$file" | awk '{print $1}')
+    
+    # Print the file name and generated date
+    echo "File: $file, Generated Date: $generated_date"
+  fi
+done
 
