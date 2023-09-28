@@ -46,6 +46,35 @@ directory_path = '/path/to/your/directory'
 
 upload_files_to_s3(bucket_name, directory_path)
 
+python
+import os
+import datetime
+import boto3
+
+def create_subfolder_with_date_format(bucket_name, file_path):
+    s3_client = boto3.client('s3')
+    
+    # Get the file's modification timestamp
+    file_timestamp = os.path.getmtime(file_path)
+    
+    # Convert the timestamp to datetime object
+    file_datetime = datetime.datetime.fromtimestamp(file_timestamp)
+    
+    # Generate the desired date format
+    date_format = file_datetime.strftime('%Y-%m-%d')
+    
+    # Create the subfolder using the date format
+    subfolder_path = f'{date_format}/'
+    s3_client.put_object(Bucket=bucket_name, Key=subfolder_path)
+    
+# Example usage
+bucket_name = 'your-bucket-name'
+file_path = '/path/to/your/file.txt'
+
+create_subfolder_with_date_format(bucket_name, file_path)
+
+
+
 
 
 
