@@ -148,6 +148,21 @@ Note: Replace `your_bucket_name`, `source_subfolder`, and `destination_subfolder
 This code will iterate and synchronize more than 1000 objects from one S3 subfolder to another S3 subfolder using the `boto3` library in Python.
 
 
+python
+import boto3
+
+s3 = boto3.client('s3')
+
+def list_subfolders(bucket_name, prefix):
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+    subfolders = [common_prefix['Prefix'].split('/')[0] for common_prefix in response.get('CommonPrefixes', [])]
+    return subfolders
+
+bucket_name = 'your_bucket_name'
+prefix = 'your_folder_prefix/'
+
+subfolders = list_subfolders(bucket_name, prefix)
+print(subfolders)
 
 
 
