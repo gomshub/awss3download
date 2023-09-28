@@ -102,7 +102,50 @@ output_table = pa.Table.from_pandas(matched_rows)
 pq.write_table(output_table, output_file)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+To iterate and synchronize more than 1000 objects using a paginator from one S3 subfolder to another S3 subfolder using `boto3` in Python, you can follow these steps:
 
+1. Import the necessary libraries:
+
+```python
+import boto3
+```
+
+2. Create an S3 client:
+
+```python
+s3 = boto3.client('s3')
+```
+
+3. Use the `list_objects_v2` method to get a list of all objects in the source subfolder. Set the `Prefix` parameter to the source subfolder name:
+
+```python
+response = s3.list_objects_v2(Bucket='your_bucket_name', Prefix='source_subfolder/')
+```
+
+4. Check if the response contains any objects. If the response has more than 1000 objects, it means there are more objects that need to be paginated. Otherwise, you can proceed to the next step:
+
+```python
+if 'Contents' in response:
+    objects = response['Contents']
+    if response['KeyCount'] > 1000:
+        paginator = s3.get_paginator('list_objects_v2')
+        pages = paginator.paginate(Bucket='your_bucket_name', Prefix='source_subfolder/')
+        for page in pages:
+            objects.extend(page['Contents'])
+```
+
+5. Iterate through each object and copy it to the destination subfolder using the `copy_object` method:
+
+```python
+for obj in objects:
+    source_key = obj['Key']
+    destination_key = source_key.replace('source_subfolder/', 'destination_subfolder/')
+    s3.copy_object(Bucket='your_bucket_name', CopySource={'Bucket': 'your_bucket_name', 'Key': source_key}, Key=destination_key)
+```
+
+Note: Replace `your_bucket_name`, `source_subfolder`, and `destination_subfolder` with your actual bucket name, source subfolder, and destination subfolder, respectively.
+
+This code will iterate and synchronize more than 1000 objects from one S3 subfolder to another S3 subfolder using the `boto3` library in Python.
 
 
 
