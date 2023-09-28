@@ -26,7 +26,7 @@ destination_bucket_name = 'your-destination-bucket'
 destination_folder_name = 'your-destination-subfolder/'
 
 sync_s3_subfolders(source_bucket_name, source_folder_name, destination_bucket_name, destination_folder_name)
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 python
 import os
 import boto3
@@ -45,7 +45,7 @@ bucket_name = 'your-bucket-name'
 directory_path = '/path/to/your/directory'
 
 upload_files_to_s3(bucket_name, directory_path)
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 python
 import os
 import datetime
@@ -73,7 +73,7 @@ file_path = '/path/to/your/file.txt'
 
 create_subfolder_with_date_format(bucket_name, file_path)
 
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 python
 import pyarrow.parquet as pq
 
@@ -101,7 +101,7 @@ output_table = pa.Table.from_pandas(matched_rows)
 # Write the output table to the output Parquet file
 pq.write_table(output_table, output_file)
 
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
