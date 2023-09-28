@@ -74,6 +74,35 @@ file_path = '/path/to/your/file.txt'
 create_subfolder_with_date_format(bucket_name, file_path)
 
 
+python
+import pyarrow.parquet as pq
+
+# Define the path to the input Parquet file
+input_file = 'input.parquet'
+
+# Define the path to the output Parquet file
+output_file = 'output.parquet'
+
+# Define the value you want to lookup
+lookup_value = 'your_lookup_value'
+
+# Read the input Parquet file
+table = pq.read_table(input_file)
+
+# Convert the Parquet table to a Pandas DataFrame
+df = table.to_pandas()
+
+# Filter the DataFrame based on the lookup value
+matched_rows = df[df['column_name'] == lookup_value]
+
+# Convert the filtered DataFrame back to a PyArrow Table
+output_table = pa.Table.from_pandas(matched_rows)
+
+# Write the output table to the output Parquet file
+pq.write_table(output_table, output_file)
+
+
+
 
 
 
