@@ -1,3 +1,33 @@
 NOTES:
 
+python
+import boto3
+
+def sync_s3_subfolders(source_bucket, source_folder, destination_bucket, destination_folder):
+    s3_client = boto3.client('s3')
+
+    # Retrieve the list of objects in the source subfolder
+    response = s3_client.list_objects_v2(Bucket=source_bucket, Prefix=source_folder)
+    source_objects = response['Contents']
+
+    # Iterate through the objects and copy them to the destination subfolder
+    for obj in source_objects:
+        key = obj['Key']
+        destination_key = key.replace(source_folder, destination_folder, 1)  # Replace source folder with destination folder
+        copy_source = {'Bucket': source_bucket, 'Key': key}
+        s3_client.copy_object(CopySource=copy_source, Bucket=destination_bucket, Key=destination_key)
+
+    print("Data synchronization completed.")
+
+# Usage: Provide the names of the source and destination buckets, along with their subfolder paths
+source_bucket_name = 'your-source-bucket'
+source_folder_name = 'your-source-subfolder/'
+destination_bucket_name = 'your-destination-bucket'
+destination_folder_name = 'your-destination-subfolder/'
+
+sync_s3_subfolders(source_bucket_name, source_folder_name, destination_bucket_name, destination_folder_name)
+
+
+
+
 
