@@ -344,6 +344,54 @@ for filename in os.listdir(directory):
         print(f"Uploaded {filename} to S3.")
 
 
+------------—
+
+
+python
+import os
+import boto3
+from concurrent.futures import ThreadPoolExecutor
+
+# Set your AWS credentials and region
+aws_access_key_id = 'your_access_key_id'
+aws_secret_access_key = 'your_secret_access_key'
+region_name = 'your_region_name'
+
+# Set the S3 bucket name and folder path
+bucket_name = 'your_bucket_name'
+folder_path = 'your_folder_path'
+
+# Set the maximum number of workers (threads)
+max_workers = 10
+
+# Create an S3 client
+s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+
+
+def upload_file(file_path):
+    # Upload a file to S3
+    key = os.path.join(folder_path, os.path.basename(file_path))
+    s3.upload_file(file_path, bucket_name, key)
+    print(f"Uploaded {file_path} to S3")
+
+
+# Get a list of files in the folder
+folder = 'your_folder_path'
+file_paths = []
+for root, dirs, files in os.walk(folder):
+    for file in files:
+        file_paths.append(os.path.join(root, file))
+
+# Create a ThreadPoolExecutor
+with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    # Submit the upload tasks to the executor
+    for file_path in file_paths:
+        executor.submit(upload_file, file_path)
+
+# All tasks have been submitted, now wait for them to complete
+# The ThreadPoolExecutor automatically manages the worker threads
+
+print("All files uploaded!")
 
 
 
