@@ -318,6 +318,30 @@ pq.write_table(output_table, 'output.parquet')
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+python
+import os
+import boto3
+from datetime import datetime
+
+# Specify the directory path
+directory = '/path/to/directory/'
+
+# Connect to S3
+s3 = boto3.client('s3')
+
+# Get the current month
+current_month = datetime.now().strftime('%m')
+
+# Iterate through files in the directory
+for filename in os.listdir(directory):
+    file_path = os.path.join(directory, filename)
+    
+    # Check if the file's last modified month matches the current month
+    if datetime.fromtimestamp(os.path.getmtime(file_path)).strftime('%m') == current_month:
+        
+        # Upload the file to S3
+        s3.upload_file(file_path, 'your-bucket-name', filename)
+        print(f"Uploaded {filename} to S3.")
 
 
 
