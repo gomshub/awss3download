@@ -208,3 +208,119 @@ do
   fi
 done
 
+
+python
+pip install pyarrow
+pip install s3fs
+
+python
+import pyarrow.parquet as pq
+import pyarrow as pa
+import s3fs
+
+
+python
+bucket_name = 'your_bucket_name'
+folder_paths = ['folder1/', 'folder2/', ...]  # Add the desired folder paths
+
+python
+lookup_value = 'your_lookup_value'
+
+python
+matched_data = []
+
+python
+s3 = s3fs.S3FileSystem()
+
+for folder_path in folder_paths:
+    full_path = f'{bucket_name}/{folder_path}'
+    files = s3.glob(f'{full_path}*.parquet')
+    
+    for file in files:
+        with s3.open(file, 'rb') as f:
+            table = pq.read_table(f)
+            df = table.to_pandas()
+            
+            # Perform the lookup on the desired field
+            matched_df = df[df['field_name'] == lookup_value]
+            
+            # Append the matched data
+            matched_data.append(matched_df)
+
+
+python
+output_df = pd.concat(matched_data)
+
+python
+output_table = pa.Table.from_pandas(output_df)
+pq.write_table(output_table, 'output.parquet')
+
+
+===============================================
+
+python
+import boto3
+from concurrent.futures import ThreadPoolExecutor
+python
+s3 = boto3.client('s3')
+
+python
+def upload_file(file_path, bucket_name, key_prefix):
+    key = key_prefix + '/' + file_path.split('/')[-1]
+    s3.upload_file(file_path, bucket_name, key)
+
+
+python
+with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    for file_path in file_paths:
+        executor.submit(upload_file, file_path, bucket_name, key_prefix)
+
+
+================#
+
+python
+import boto3
+import pyarrow.parquet as pq
+import pyarrow as pa
+
+python
+s3 = boto3.client('s3')
+
+python
+def process_parquet_file(file_path):
+    # Download the Parquet file from S3
+    s3.download_file(bucket_name, file_path, 'temp.parquet')
+
+    # Read the Parquet file into a Pandas DataFrame
+    df = pq.read_table('temp.parquet').to_pandas()
+
+    # Perform the lookup on the desired field
+    matched_df = df[df['field_name'] == 'lookup_value']
+
+    return matched_df
+
+
+python
+matched_dfs = []
+for file_path in file_paths:
+    matched_df = process_parquet_file(file_path)
+    matched_dfs.append(matched_df)
+
+
+python
+output_df = pd.concat(matched_dfs)
+
+
+python
+output_table = pa.Table.from_pandas(output_df)
+pq.write_table(output_table, 'output.parquet')
+
+
+
+
+
+
+
+
+
+
