@@ -473,3 +473,50 @@ with Pool(num_processes) as pool:
 
 
 -------
+
+python
+import zipfile
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+import boto3
+from multiprocessing import Pool
+import io
+
+def process_zip(zip_file):
+    s3_bucket_name = 'your_s3_bucket_name'
+    s3_folder = 's3_folder'
+    s3_client = boto3.client('s3')
+
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        for file_name in zip_ref.namelist():
+            if file_name.endswith('.txt'):
+                with zip_ref.open(file_name, 'r') as file:
+                    # Read the data from the file within the zip
+                    data = file.read().decode('utf-8')
+                    
+                    # Process the data (example: convert to DataFrame)
+                    df = pd.DataFrame({'Data': [data]})
+                    
+                    # Convert DataFrame to PyArrow Table
+                    table = pa.Table.from_pandas(df)
+                    
+                    # Write Parquet data to in-memory buffer
+                    parquet_buffer = io.BytesIO()
+                    pq.write_table(table, parquet_buffer)
+                    
+                    # Upload Parquet data to S3
+                    s3_file_path = f'{s3_folder}/{file_name[:-4]}.parquet'
+                    parquet_buffer.seek(0)  # Reset the buffer position
+                    s3_client.upload_fileobj(parquet_buffer, s3_bucket_name, s3_file_path)
+
+# List of zip file paths
+zip_files = ['path_to_zip_file1.zip', 'path_to_zip_file2.zip', ...]  # Replace with the actual zip file paths
+
+# Process zip files in parallel
+num_processes = min(len(zip_files), os.cpu_count())  # Adjust the number of processes as per your system's capacity
+with Pool(num_processes) as pool:
+    pool.map(process_zip, zip_files)
+
+
+
