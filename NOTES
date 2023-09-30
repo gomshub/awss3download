@@ -394,5 +394,32 @@ with ThreadPoolExecutor(max_workers=max_workers) as executor:
 print("All files uploaded!")
 
 
+-----------
+
+python
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+import boto3
 
 
+text_data = ['Line 1', 'Line 2', 'Line 3']  # Replace with your actual text data
+df = pd.DataFrame(text_data, columns=['TextColumn'])
+python
+table = pa.Table.from_pandas(df)
+
+python
+parquet_buffer = pa.BufferOutputStream()
+
+python
+pq.write_table(table, parquet_buffer)
+
+python
+s3_bucket_name = 'your_s3_bucket_name'
+s3_file_path = 's3_folder/parquet_file.parquet'
+s3_client = boto3.client('s3')
+parquet_buffer.seek(0)  # Reset the buffer position
+s3_client.upload_fileobj(parquet_buffer, s3_bucket_name, s3_file_path)
+
+
+-----------
