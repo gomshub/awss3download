@@ -423,3 +423,53 @@ s3_client.upload_fileobj(parquet_buffer, s3_bucket_name, s3_file_path)
 
 
 -----------
+python
+import os
+import zipfile
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+import boto3
+from multiprocessing import Pool
+
+def extract_and_process_zip(zip_file):
+    extract_folder_path = 'path_to_extract_folder'  # Replace with your desired extract folder path
+    zip_file_path = os.path.join('path_to_zip_files', zip_file)  # Replace with the path to your zip files directory
+    
+    # Extract the zip file
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_folder_path)
+    
+    # Read the data from the extracted file
+    extracted_file_path = os.path.join(extract_folder_path, 'extracted_file.txt')  # Replace with the actual extracted file path
+    df = pd.read_csv(extracted_file_path)  # Replace with the appropriate method to read your extracted data
+    
+    # Convert DataFrame to PyArrow Table
+    table = pa.Table.from_pandas(df)
+    
+    # Write Parquet data to in-memory buffer
+    parquet_buffer = pa.BufferOutputStream()
+    pq.write_table(table, parquet_buffer)
+    
+    # Upload Parquet data to S3
+    s3_bucket_name = 'your_s3_bucket_name'
+    s3_file_path = f's3_folder/{zip_file}.parquet'
+    s3_client = boto3.client('s3')
+    
+    parquet_buffer.seek(0)  # Reset the buffer position
+    s3_client.upload_fileobj(parquet_buffer, s3_bucket_name, s3_file_path)
+    
+    # Clean up extracted files if needed
+    os.remove(extracted_file_path)
+
+# Get a list of zip files in the directory
+zip_files_directory = 'path_to_zip_files_directory'  # Replace with the path to your zip files directory
+zip_files = [f for f in os.listdir(zip_files_directory) if f.endswith('.zip')]
+
+# Process zip files in parallel
+num_processes = min(len(zip_files), os.cpu_count())  # Adjust the number of processes as per your system's capacity
+with Pool(num_processes) as pool:
+    pool.map(extract_and_process_zip, zip_files)
+
+
+-------
