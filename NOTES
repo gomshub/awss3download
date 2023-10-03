@@ -519,4 +519,41 @@ with Pool(num_processes) as pool:
     pool.map(process_zip, zip_files)
 
 
+========#
 
+Certainly! Here's an updated version of the code that unzips the gz file, untars the resulting file to a buffer, reads the buffer data as a txt file, and converts the txt data to a Parquet buffer using Python:
+
+```python
+import gzip
+import tarfile
+import io
+import pandas as pd
+import pyarrow as pa
+
+# Define the path to your gz file
+gz_file_path = "path/to/your/file.tar.gz"
+
+# Unzip the gz file
+with gzip.open(gz_file_path, 'rb') as gz_file:
+    tar_buffer = io.BytesIO(gz_file.read())
+
+# Extract the tar file from the buffer
+with tarfile.open(fileobj=tar_buffer, mode='r') as tar:
+    txt_file = tar.extractfile('data.txt')
+    txt_data = txt_file.read().decode()
+
+# Convert text data to a DataFrame (assuming it's in CSV format)
+df = pd.read_csv(io.StringIO(txt_data))
+
+# Write the DataFrame to a Parquet buffer
+parquet_buffer = io.BytesIO()
+table = pa.Table.from_pandas(df)
+pq.write_table(table, parquet_buffer)
+
+# Reset the buffer position to the beginning
+parquet_buffer.seek(0)
+
+# You can now use the parquet_buffer as needed
+```
+
+Make sure to replace `"path/to/your/file.tar.gz"` with the actual path to your gz file. This code unzips the gz file, untars the resulting file to a buffer, reads the buffer data as a txt file, converts it to a pandas DataFrame, and finally writes the DataFrame to a Parquet buffer named `parquet_buffer`. You can use `parquet_buffer` as needed for further processing or saving it to a file if desired.
