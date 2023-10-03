@@ -591,3 +591,45 @@ with tarfile.open(fileobj=tar_buffer, mode='r') as tar:
 =========#
 
 read multiple parquet files in a s3 folder as txt data and return as gz file using Python
+
+To read multiple Parquet files from an S3 folder as text data and return them as a gzipped file using Python, you can utilize the `boto3` library for S3 operations and the `pyarrow` library for reading and converting Parquet files. Here's an example code snippet:
+
+```python
+import boto3
+import pyarrow.parquet as pq
+import gzip
+import io
+
+# Define your S3 bucket and folder path
+bucket_name = "your_bucket_name"
+folder_path = "your_folder_path"
+
+# Initialize the S3 client
+s3_client = boto3.client('s3')
+
+# List all Parquet files in the S3 folder
+response = s3_client.list_objects(Bucket=bucket_name, Prefix=folder_path)
+parquet_files = [obj['Key'] for obj in response['Contents'] if obj['Key'].endswith('.parquet')]
+
+# Read and concatenate the Parquet files as text data
+txt_data = ""
+for parquet_file in parquet_files:
+    # Read the Parquet file
+    obj = s3_client.get_object(Bucket=bucket_name, Key=parquet_file)
+    parquet_buffer = io.BytesIO(obj['Body'].read())
+    table = pq.read_table(parquet_buffer)
+    
+    # Convert to DataFrame and concatenate the text data
+    df = table.to_pandas()
+    txt_data += df.to_string(index=False)
+
+# Compress the text data as gzipped file
+gz_buffer = io.BytesIO()
+with gzip.GzipFile(fileobj=gz_buffer, mode='w') as gz_file:
+    gz_file.write(txt_data.encode('utf-8'))
+
+# Upload the gzipped file to S3
+s3_client.put_object(Body=gz_buffer.getvalue(), Bucket=bucket_name, Key="output/file.tar.gz")
+```
+
+Make sure to replace `"your_bucket_name"` with the name of your S3 bucket and `"your_folder_path"` with the path to your Parquet files within the bucket. The code lists all the Parquet files in the specified S3 folder, reads and concatenates them as text data, compresses the text data as a gzipped file, and uploads it back to S3 with the specified output file path.
