@@ -588,3 +588,6 @@ with tarfile.open(fileobj=tar_buffer, mode='r') as tar:
 
             # You can now use the filename and file_buffer as needed
 
+=========#
+
+read multiple parquet files in a s3 folder as txt data and return as gz file using Python
