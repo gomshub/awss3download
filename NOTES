@@ -557,3 +557,34 @@ parquet_buffer.seek(0)
 ```
 
 Make sure to replace `"path/to/your/file.tar.gz"` with the actual path to your gz file. This code unzips the gz file, untars the resulting file to a buffer, reads the buffer data as a txt file, converts it to a pandas DataFrame, and finally writes the DataFrame to a Parquet buffer named `parquet_buffer`. You can use `parquet_buffer` as needed for further processing or saving it to a file if desired.
+
+
+## tar file name
+
+python
+import gzip
+import tarfile
+import io
+
+# Define the path to your gz file
+gz_file_path = "path/to/your/file.tar.gz"
+
+# Unzip the gz file
+with gzip.open(gz_file_path, 'rb') as gz_file:
+    tar_buffer = io.BytesIO(gz_file.read())
+
+# Extract the files from the tar buffer
+with tarfile.open(fileobj=tar_buffer, mode='r') as tar:
+    for tarinfo in tar:
+        if tarinfo.isfile():
+            # Extract the file to a buffer
+            file_buffer = tar.extractfile(tarinfo).read()
+            # Get the filename of the extracted file
+            filename = tarinfo.name
+            
+            # Process the file or perform any desired operations
+            print("Extracted file:", filename)
+            print("File contents:", file_buffer)
+
+            # You can now use the filename and file_buffer as needed
+
