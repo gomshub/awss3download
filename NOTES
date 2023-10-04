@@ -1,4 +1,48 @@
 NOTES:
+
+
+Certainly! Here's an updated version of the shell script that recursively searches for zip files in a directory for a particular month and year, extracts them, and fetches the data within:
+
+```shell
+#!/bin/bash
+
+# Specify the directory to search
+directory="/path/to/directory"
+
+# Specify the target month and year (format: YYYY-MM)
+target_month="2023-09"
+
+# Get the start and end dates of the target month
+start_date="${target_month}-01"
+end_date=$(date -d "${target_month}-01 +1 month -1 day" +%Y-%m-%d)
+
+# Find zip files within the target month recursively
+files=$(find "$directory" -type f -name "*.zip" -newermt "$start_date" ! -newermt "$end_date + 1 day")
+
+# Loop through each zip file
+for file in $files; do
+  # Extract the file to a temporary directory
+  temp_dir=$(mktemp -d)
+  unzip "$file" -d "$temp_dir"
+
+  # Fetch and process the data
+  # Replace the echo statement with your desired data processing logic
+  echo "Fetching data from $file"
+  cat "$temp_dir/data.txt"  # Example: Assuming the data is stored in a file called data.txt
+
+  # Clean up the temporary directory
+  rm -rf "$temp_dir"
+done
+```
+
+Make sure to replace `/path/to/directory` with the actual directory path you want to search. Also, modify the `target_month` variable to specify the desired month and year in the format `YYYY-MM`. Adjust the data processing logic within the loop as per your specific requirements.
+
+
+
+====###
+
+
+
 Certainly! Here's a sample shell script that recursively searches for zip files in a directory, identifies the files from the previous date, extracts them, and fetches the data within:
 
 ```shell
