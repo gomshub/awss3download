@@ -1,0 +1,11 @@
+To generate a CRT chain and key for a host URL, you can use the `openssl` command-line tool. Here's an example of how you can generate a self-signed certificate chain (CRT) and private key for a host URL:
+
+```shell
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout private_key.key -out certificate.crt -subj "/CN=your-host-url"
+```
+
+This command generates a self-signed certificate and private key using the RSA algorithm with a key size of 2048 bits. The certificate is valid for 365 days (`-days 365`). The private key is saved to the `private_key.key` file, and the certificate chain is saved to the `certificate.crt` file.
+
+Make sure to replace `"your-host-url"` with the actual URL or hostname you want to generate the certificate for. The `-subj` option specifies the subject of the certificate, including the common name (CN) field.
+
+Note that a self-signed certificate should only be used for testing or development purposes. For production use, it's recommended to obtain a certificate from a trusted certificate authority (CA).
