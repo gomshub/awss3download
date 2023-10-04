@@ -1,5 +1,42 @@
 NOTES:
 
+To make a curl request to upload a file as data-binary and pass other data values like name and date, you can use the following command:
+
+```bash
+curl -X POST -F 'file=@/path/to/file' -F 'name=John' -F 'date=2022-01-01' http://localhost:5000/upload
+```
+
+This command uploads the file located at `/path/to/file` and includes the additional form fields `name` and `date` with their respective values.
+
+To read this request in a Python Flask request, you can use the `request` object provided by Flask. Here's an example of how you can access the uploaded file and the form fields:
+
+```python
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    file = request.files['file']  # Access the uploaded file
+    name = request.form['name']   # Access the 'name' form field
+    date = request.form['date']   # Access the 'date' form field
+
+    # Process the uploaded file and form fields
+    # ...
+
+    return 'File uploaded successfully'
+
+if __name__ == '__main__':
+    app.run()
+```
+
+In the above example, the `request.files` dictionary is used to access the uploaded file, and the `request.form` dictionary is used to access the form fields. The keys `'file'`, `'name'`, and `'date'` correspond to the names used in the curl command.
+
+You can customize the route and field names according to your requirements.
+
+
+#######
+
 Certainly! Here's an example of how you can send and receive gzipped data using Python and the `requests` library:
 
 ```python
