@@ -1,5 +1,37 @@
 NOTES:
 
+To get a gz file as buffer data into a variable using a shell script, you can use the following command:
+
+```
+variable=$(cat filename.gz | base64)
+```
+
+This command will read the contents of the gz file, encode it in base64 format, and store it in the variable. You can then use the variable as needed in your script.
+
+
+===#
+
+To unzip gz data buffer as txt data buffer using Python, you can use the `gzip` module. Here's an example:
+
+```python
+import gzip
+
+# Assuming you have the gz data buffer stored in a variable called gz_data_buffer
+
+# Create a BytesIO object to hold the gz data buffer
+gz_file = gzip.GzipFile(fileobj=gz_data_buffer)
+
+# Read the uncompressed text data buffer
+txt_data_buffer = gz_file.read()
+
+# Print the uncompressed text data
+print(txt_data_buffer)
+```
+
+In this example, we use the `gzip.GzipFile` class to create a file-like object from the gz data buffer. We then read the uncompressed text data from this file-like object. Finally, we can use the `txt_data_buffer` variable as needed in your Python script.
+
+=====#
+
 python
 import pandas as pd
 import boto3
