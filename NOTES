@@ -1,5 +1,43 @@
 NOTES:
+Certainly! Here's a sample shell script that recursively searches for zip files in a directory, identifies the files from the previous date, extracts them, and fetches the data within:
 
+```shell
+#!/bin/bash
+
+# Specify the directory to search
+directory="/path/to/directory"
+
+# Get the previous date in YYYY-MM-DD format
+previous_date=$(date -d "yesterday" +%Y-%m-%d)
+
+# Find zip files from the previous date recursively
+files=$(find "$directory" -type f -name "*.zip" -newermt "$previous_date" ! -newermt "$previous_date + 1 day")
+
+# Loop through each zip file
+for file in $files; do
+  # Extract the file to a temporary directory
+  temp_dir=$(mktemp -d)
+  unzip "$file" -d "$temp_dir"
+
+  # Fetch and process the data
+  # Replace the echo statement with your desired data processing logic
+  echo "Fetching data from $file"
+  cat "$temp_dir/data.txt"  # Example: Assuming the data is stored in a file called data.txt
+
+  # Clean up the temporary directory
+  rm -rf "$temp_dir"
+done
+```
+
+Make sure to replace `/path/to/directory` with the actual directory path you want to search. Additionally, modify the data processing logic according to your specific requirements.
+
+
+
+
+
+
+
+====#
 python
 import boto3
 
