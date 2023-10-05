@@ -1,6 +1,59 @@
 NOTES:
 
 
+To parse a folder and its subfolders for files within a specific date range using a shell script, you can use the `find` command along with the `stat` command to get the file's modification date.
+
+Here's an example shell script that accomplishes this:
+
+```bash
+#!/bin/bash
+
+# Set the start and end month (format: YYYY-MM)
+start_month="2022-01"
+end_month="2022-03"
+
+# Function to check if a file falls within the specified date range
+is_within_date_range() {
+    file="$1"
+    start_date=$(date -d "$start_month-01" +%s)
+    end_date=$(date -d "$end_month-01 +1 month -1 day" +%s)
+    file_date=$(stat -c %Y "$file")
+
+    if [[ $file_date -ge $start_date && $file_date -le $end_date ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to parse a folder and its subfolders
+parse_folder() {
+    folder="$1"
+
+    # Loop through all files and folders in the current folder
+    for file in "$folder"/*; do
+        if [[ -d "$file" ]]; then
+            # Recursively parse subfolders
+            parse_folder "$file"
+        elif [[ -f "$file" ]]; then
+            # Check if the file falls within the specified date range
+            if is_within_date_range "$file"; then
+                echo "$file"
+            fi
+        fi
+    done
+}
+
+# Start parsing from the specified folder
+parse_folder "/path/to/folder"
+```
+
+Make sure to replace `/path/to/folder` with the actual path to the folder you want to parse. Also, update the `start_month` and `end_month` variables with the desired start and end months.
+
+This script will recursively search for files in the specified folder and its subfolders, and print the paths of the files that fall within the specified date range.
+
+=======#
+
 To upload a gz file as data and pass parameters using curl in a shell script for multiple files in a folder, you can use a loop to iterate over the files and send individual requests. Here's an example:
 
 ```shell
