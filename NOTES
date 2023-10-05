@@ -1,5 +1,31 @@
 NOTES:
 
+To unzip a gz file and extract only the text data using Python, you can use the `gzip` module. Here's an example:
+
+```python
+import gzip
+
+def extract_text_from_gz(file_path):
+    with gzip.open(file_path, 'rt') as gz_file:
+        text_data = gz_file.read()
+    return text_data
+
+# Usage example
+gz_file_path = '/path/to/file.gz'
+text_data = extract_text_from_gz(gz_file_path)
+print(text_data)
+```
+
+In this example, we define a function `extract_text_from_gz` that takes the path to the gz file as input. The function opens the gz file using `gzip.open` with the `'rt'` mode to read it as text. The `read()` method is then used to extract the text data from the gz file.
+
+You can call this function by providing the path to your gz file, and it will return the extracted text data as a string. Feel free to modify the code according to your specific requirements, such as saving the extracted text data to a file or processing it further.
+
+
+
+======#####
+
+
+
 Could we upload gz file as data-binary from a remote machine using curl? If so how to process this curl request and get the request gz file data and name and date using flask and unzip gz as buffer and extract txt file buffer and convert to parquet puffer and upload parquet buffer to s3 using Python ?
 
 Yes, you can upload a gz file as `data-binary` from a remote machine using curl. Here's an example of how you can modify the curl command:
