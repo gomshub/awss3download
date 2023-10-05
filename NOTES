@@ -1,6 +1,66 @@
 NOTES:
 
 Could we upload gz file as data-binary from a remote machine using curl? If so how to process this curl request and get the request gz file data and name and date using flask and unzip gz as buffer and extract txt file buffer and convert to parquet puffer and upload parquet buffer to s3 using Python ?
+
+Yes, you can upload a gz file as `data-binary` from a remote machine using curl. Here's an example of how you can modify the curl command:
+
+```bash
+curl -X POST -H "Content-Type: application/octet-stream" \
+     -H "name: $name" -H "date: $date" \
+     --data-binary "@http://example.com/remote-file.gz" http://example.com/upload
+```
+
+In this example, we're using `--data-binary` to specify the remote file's URL directly with `@http://example.com/remote-file.gz`. Replace the URL with the actual URL of the remote gz file.
+
+To process this curl request in Flask and handle the gz file as a buffer, you can modify the Flask app code as follows:
+
+```python
+from flask import Flask, request
+import gzip
+import shutil
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+import boto3
+
+app = Flask(__name__)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    name = request.headers.get('name')
+    date = request.headers.get('date')
+    file = request.data
+
+    # Unzip the gz file from buffer and extract the txt file
+    with gzip.GzipFile(fileobj=file) as gz_file:
+        txt_buffer = gz_file.read()
+
+    # Convert txt buffer to parquet
+    df = pd.read_csv(pd.compat.StringIO(txt_buffer.decode('utf-8')))
+    table = pa.Table.from_pandas(df)
+    parquet_buffer = pa.BufferOutputStream()
+    pq.write_table(table, parquet_buffer)
+
+    # Upload parquet buffer to S3
+    s3_bucket = 'your-s3-bucket'
+    s3_key = f'path/in/s3/{name}.parquet'
+    s3_client = boto3.client('s3')
+    s3_client.upload_fileobj(parquet_buffer.getvalue(), s3_bucket, s3_key)
+
+    return 'Success'
+
+if __name__ == '__main__':
+    app.run()
+```
+
+In this updated Flask app code, we use `gzip.GzipFile` to create a GzipFile object from the gz file buffer. We then read the contents of the gz file using `gz_file.read()` and store it in the `txt_buffer`. We convert the txt buffer to a Pandas DataFrame and then to a Parquet buffer using PyArrow.
+
+Finally, we upload the Parquet buffer to an S3 bucket using the `boto3` library's `upload_fileobj` method, passing `parquet_buffer.getvalue()` as the file-like object.
+
+Remember to customize the S3 bucket details and any other parameters according to your specific requirements.
+
+
+
 ====##
 
 To search files in S3 with subfolder names as dates and filter the parquet files within a specific date range, you can use the boto3 library in Python. Here's an example of how you can achieve this:
