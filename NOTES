@@ -1,6 +1,32 @@
 NOTES:
 
 
+To list files in a folder with a specified modified date range using the `find` command in a shell script, you can use the following script:
+
+```shell
+#!/bin/bash
+
+# Set the start and end dates in the desired format
+start_date="2022-01-01"
+end_date="2022-02-01"
+
+# Convert start and end dates to epoch time
+start_epoch=$(date -d "$start_date" +%s)
+end_epoch=$(date -d "$end_date" +%s)
+
+# Specify the folder path
+folder="/path/to/folder"
+
+# Use the find command to list files within the specified date range
+find "$folder" -type f -newermt "$start_date" ! -newermt "$end_date" -ls
+```
+
+Make sure to replace `/path/to/folder` with the actual path to the folder you want to search in. The script sets the start and end dates in the format `YYYY-MM-DD`, converts them to epoch time, and then uses the `find` command with the `-newermt` option to filter files modified within the specified date range. The `-ls` option is used to display detailed information about the files found.
+
+Save the script to a file (e.g., `list_files.sh`), make it executable (`chmod +x list_files.sh`), and then run it using `./list_files.sh` in the terminal.
+
+
+===##
 
 s3 repo search for date range of files and do lookup
 
