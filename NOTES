@@ -1,6 +1,72 @@
 NOTES:
 
 
+
+s3 repo search for date range of files and do lookup
+
+
+To read Parquet files from a start date to an end date within S3 repo subfolders, and then filter and write the matched rows to a new Parquet file using Python, you can follow these steps:
+
+1. Install the necessary libraries:
+   ```python
+   pip install pyarrow
+   pip install s3fs
+   ```
+
+2. Import the required libraries:
+   ```python
+   import pyarrow.parquet as pq
+   import s3fs
+   import pandas as pd
+   ```
+
+3. Define the start and end dates:
+   ```python
+   start_date = '2022-01-01'
+   end_date = '2022-02-28'
+   ```
+
+4. Set up the S3 file system:
+   ```python
+   fs = s3fs.S3FileSystem()
+   bucket_name = 'your_bucket_name'
+   s3_folder = 'your_folder_path'
+   ```
+
+5. Get the list of files within the specified date range:
+   ```python
+   file_list = fs.glob(f's3://{bucket_name}/{s3_folder}/*/*.parquet')
+   filtered_files = [file for file in file_list if start_date <= file.split('/')[-2] <= end_date]
+   ```
+
+6. Read and filter the Parquet files:
+   ```python
+   matched_rows = []
+   for file in filtered_files:
+       table = pq.read_table(f's3://{bucket_name}/{file}', filesystem=fs)
+       df = table.to_pandas()
+       matched_rows.append(df[df['field_name'] == 'desired_value'])
+   matched_df = pd.concat(matched_rows)
+   ```
+
+7. Write the matched rows to a new Parquet file:
+   ```python
+   output_file = 'matched_rows.parquet'
+   pq.write_table(
+       pa.Table.from_pandas(matched_df),
+       f's3://{bucket_name}/{output_file}',
+       filesystem=fs
+   )
+   ```
+
+Make sure to replace `'your_bucket_name'` and `'your_folder_path'` with your actual S3 bucket name and folder path. Also, modify `'field_name'` and `'desired_value'` to match the specific field and value you want to filter for.
+
+This code will read all Parquet files within the specified date range, filter the rows based on the desired field and value, and write the matched rows to a new Parquet file.
+
+=====####
+
+
+
 To parse a folder and its subfolders for files within a specific date range using a shell script, you can use the `find` command along with the `stat` command to get the file's modification date.
 
 Here's an example shell script that accomplishes this:
