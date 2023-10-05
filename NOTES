@@ -1,5 +1,50 @@
 NOTES:
 
+To make a cURL request for uploading files present in remote network Windows machine using the `-F` option via a shell script, you can follow these steps:
+
+1. Install cURL if it is not already installed on your system. You can check if it is installed by running `curl --version` in the terminal. If it not installed, you can it using the package manager for your operating system.
+
+2. Create a shell script file (e.g., `upload.sh`) and open it in a text editor.
+
+3. Add the following code to the script:
+
+```bash
+#!/bin/bash
+
+# Set the remote Windows machine IP address or hostname
+remote_machine="REMOTE_MACHINE_IP_OR_HOSTNAME"
+
+# Set the remote file path where you want to upload the file
+remote_file_path="REMOTE_FILE_PATH"
+
+# Set the local file path of the file you want to upload
+local_file_path="LOCAL_FILE_PATH"
+
+# Make the cURL request to upload the file
+curl -F "file=@$local_file_path" "smb://$remote_machine/$remote_file_path"
+```
+
+Make sure to replace `REMOTE_MACHINE_IP_OR_HOSTNAME` with the IP address or hostname of the remote Windows machine, `REMOTE_FILE_PATH` with the desired file path on the remote machine, and `LOCAL_FILE_PATH` with the local file path of the file you want to upload.
+
+4. Save the script file and exit the text editor.
+
+5. Make the script executable by running the following command in the terminal:
+
+```bash
+chmod +x upload.sh
+```
+
+6. Run the script by executing the following command:
+
+```bash
+./upload.sh
+```
+
+The script will use cURL to upload the file from your local machine to the specified remote Windows machine using the `-F` option.
+
+###=====
+
+
 To read files for a particular date range on a remote Windows machine using a shell script, you can use the `smbclient` command-line tool. Here's an example script:
 
 ```bash
