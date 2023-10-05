@@ -1,5 +1,67 @@
 NOTES:
 
+
+To upload a gz file as data and pass parameters using curl in a shell script for multiple files in a folder, you can use a loop to iterate over the files and send individual requests. Here's an example:
+
+```shell
+#!/bin/bash
+
+FOLDER_PATH="/path/to/folder"
+
+for FILE in $FOLDER_PATH/*.gz; do
+    FILENAME=$(basename $FILE)
+    DATE=$(date +%Y-%m-%d)
+    
+    curl -X POST \
+        -F "file=@$FILE" \
+        -F "name=$FILENAME" \
+        -F "date=$DATE" \
+        http://your-flask-api-endpoint
+done
+```
+
+In this script, `$FOLDER_PATH` represents the path to the folder containing the gz files. The loop iterates over each file in the folder, and for each file, it extracts the filename using `basename` and sets the current date using the `date` command. Then, it uses curl to send a POST request to your Flask API endpoint, passing the file, name, and date as form data.
+
+In your Flask application, you can receive this request and process the data using the `request` module. Here's an example of how you can handle the request and extract the file, name, and date:
+
+```python
+from flask import Flask, request
+import gzip
+import boto3
+
+app = Flask(__name__)
+
+@app.route('/', methods=['POST'])
+def upload_file():
+    file = request.files['file']
+    name = request.form.get('name')
+    date = request.form.get('date')
+
+    # Save the file to disk
+    file.save('/path/to/save/' + name)
+
+    # Unzip the gz file
+    with gzip.open('/path/to/save/' + name, 'rb') as f_in:
+        with open('/path/to/save/' + name[:-3], 'wb') as f_out:
+            f_out.write(f_in.read())
+
+    # Upload the unzipped file to S3
+    s3 = boto3.client('s3')
+    s3.upload_file('/path/to/save/' + name[:-3], 'your-bucket-name', name[:-3])
+
+    return 'File uploaded successfully.'
+
+if __name__ == '__main__':
+    app.run()
+```
+
+In this Flask application, the route `/` is defined to handle the POST request. The file, name, and date are extracted from the request using the `request.files` and `request.form` attributes. The file is then saved to disk, gzipped file is unzipped, and the unzipped file is uploaded to an S3 bucket using the `boto3` library.
+
+Please note that you will need to modify the file paths and S3 bucket name in the code to match your specific setup.
+
+
+====#
+
 To make a curl request to upload a file as data-binary and pass other data values like name and date, you can use the following command:
 
 ```bash
