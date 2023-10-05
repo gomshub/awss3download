@@ -1,5 +1,42 @@
 NOTES:
 
+To read files for a particular date range on a remote Windows machine using a shell script, you can use the `smbclient` command-line tool. Here's an example script:
+
+```bash
+#!/bin/bash
+
+# Set the remote machine details
+remote_machine="192.168.1.100"
+remote_username="username"
+remote_password="password"
+
+# Set the date range
+start_date="2022-01-01"
+end_date="2022-01-31"
+
+# Connect to the remote machine and list files
+smbclient "//${remote_machine}/share" -U "${remote_username}%${remote_password}" -c "ls" | while read -r line; do
+    # Extract the file name and modification date
+    filename=$(echo "$line" | awk '{print $1}')
+    mod_date=$(echo "$line" | awk '{print $2}')
+
+    # Check if the file is within the date range
+    if [[ "$mod_date" >= "$start_date" && "$mod_date" <= "$end_date" ]]; then
+        # Read the file content
+        smbclient "//${remote_machine}/share" -U "${remote_username}%${remote_password}" -c "get "$filename" -" > "$filename"
+        echo "Read file: $filename"
+    fi
+done
+```
+
+Make sure to replace `192.168.1.100`, `username`, and `password` with the appropriate remote machine details. Also, adjust the `start_date` and `end_date` variables to define your desired date range.
+
+This script connects to the remote machine using the `smbclient` command, lists all files in the shared folder, and then iterates over each file. It extracts the file name and modification date using `awk` and checks if the modification date falls within the specified date range. If it does, the script uses `smbclient` to read the file content and saves it locally with the same filename. Finally, it prints a message for each file read.
+
+Note: Ensure that you have the `smbclient` package installed on your system before running this script.
+
+
+====####
 
 bash
 #!/bin/bash
