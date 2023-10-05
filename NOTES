@@ -1,6 +1,74 @@
 NOTES:
 
 
+====##
+
+To search files in S3 with subfolder names as dates and filter the parquet files within a specific date range, you can use the boto3 library in Python. Here's an example of how you can achieve this:
+
+1. Install the required libraries:
+```python
+pip install boto3
+pip install pyarrow
+```
+
+2. Import the necessary libraries:
+```python
+import boto3
+import pyarrow.parquet as pq
+import pyarrow as pa
+from datetime import datetime
+```
+
+3. Define the S3 bucket name and the date range:
+```python
+bucket_name = 'your_bucket_name'
+start_date = datetime.strptime('2022-01-01', '%Y-%m-%d')
+end_date = datetime.strptime('2022-01-31', '%Y-%m-%d')
+```
+
+4. Create a function to search for parquet files within the specified date range:
+```python
+def search_parquet_files(bucket, prefix, start_date, end_date):
+    s3 = boto3.client('s3')
+    paginator = s3.get_paginator('list_objects_v2')
+    operation_parameters = {'Bucket': bucket, 'Prefix': prefix}
+    page_iterator = paginator.paginate(**operation_parameters)
+
+    for page in page_iterator:
+        if 'Contents' in page:
+            for file in page['Contents']:
+                file_key = file['Key']
+                file_date = datetime.strptime(file_key.split('/')[-2], '%Y-%m-%d')
+                if start_date <= file_date <= end_date and file_key.endswith('.parquet'):
+                    yield file_key
+```
+
+5. Create a function to perform the lookup and write the matched rows to the result parquet file:
+```python
+def lookup_and_write_result(bucket, file_key, lookup_field, result_file):
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket=bucket, Key=file_key)
+    table = pq.read_table(obj['Body'])
+
+    # Perform the lookup on the desired field
+    result_table = table.filter(pa.field(lookup_field) == 'desired_value')
+
+    # Write the matched rows to the result parquet file
+    pq.write_table(result_table, result_file)
+```
+
+6. Iterate through the filtered parquet files and perform the lookup:
+```python
+for file_key in search_parquet_files(bucket_name, '', start_date, end_date):
+    lookup_and_write_result(bucket_name, file_key, 'lookup_field_name', 'result.parquet')
+```
+
+Make sure to replace `'your_bucket_name'` with the actual name of your S3 bucket and adjust the lookup field and desired value according to your requirements.
+
+Note: This code assumes that your parquet files are stored directly under the date subfolders in S3. If your files are stored in a different structure, you may need to modify the code accordingly.
+
+
+=========#
 To search files in an S3 bucket with subfolder names as dates and perform a search for files within a date range using Python, you can use the `boto3` library, which is the official AWS SDK for Python. Here's an example code snippet that demonstrates this:
 
 ```python
