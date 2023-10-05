@@ -1,6 +1,47 @@
 NOTES:
 
 
+To search files in an S3 bucket with subfolder names as dates and perform a search for files within a date range using Python, you can use the `boto3` library, which is the official AWS SDK for Python. Here's an example code snippet that demonstrates this:
+
+```python
+import boto3
+from datetime import datetime, timedelta
+
+def search_files_in_date_range(bucket_name, start_date, end_date):
+    s3_client = boto3.client('s3')
+
+    # Convert start and end dates to datetime objects
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    # Generate a list of dates within the range
+    date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+
+    # Iterate over each date in the range
+    for date in date_range:
+        # Convert date to folder name format (YYYY-mm-dd)
+        folder_name = date.strftime('%Y-%m-%d')
+
+        # List objects in the folder
+        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+
+        # Check if any objects are found
+        if 'Contents' in response:
+            # Iterate over each object in the folder
+            for obj in response['Contents']:
+                # Print the object key (file path)
+                print(obj['Key'])
+
+# Usage example
+bucket_name = 'your-bucket-name'
+start_date = '2022-01-01'
+end_date = '2022-01-05'
+
+search_files_in_date_range(bucket_name, start_date, end_date)
+```
+
+Make sure to replace `'your-bucket-name'` with the actual name of your S3 bucket. Also, provide the desired start and end dates in the `start_date` and `end_date` variables, respectively. The code will list the object keys (file paths) for all files within the specified date range.
+
 ===##
 
 s3 repo search for date range of files and do lookup
