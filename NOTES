@@ -1,5 +1,31 @@
 NOTES:
 
+To unzip a gz file and extract only the text data from .txt files while ignoring other file types, you can use the `tarfile` module in Python. Here's an example:
+
+```python
+import tarfile
+import os
+
+def extract_text_from_gz(file_path):
+    with tarfile.open(file_path, 'r:gz') as tar:
+        for member in tar.getmembers():
+            if os.path.splitext(member.name)[1] == '.txt':
+                file = tar.extractfile(member)
+                text_data = file.read().decode('utf-8')
+                print(text_data)
+                # process the text data further as needed
+
+# Usage example
+gz_file_path = '/path/to/file.gz'
+extract_text_from_gz(gz_file_path)
+```
+
+In this example, we use the `tarfile` module to open the gz file and iterate over its members. For each member, we check if the file extension is `.txt` using `os.path.splitext(member.name)[1]`. If it is a text file, we extract the file using `tar.extractfile(member)`, read its contents, decode them using the appropriate encoding (e.g., `utf-8`), and process the text data further as needed.
+
+You can modify the code inside the `if` condition to save the text data to a file, perform additional processing, or handle it according to your requirements.
+
+======###
+
 To unzip a gz file and extract only the text data using Python, you can use the `gzip` module. Here's an example:
 
 ```python
