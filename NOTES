@@ -1,5 +1,27 @@
 NOTES:
 
+
+bash
+#!/bin/bash
+
+# Network Windows machine details
+USERNAME="your_username"
+PASSWORD="your_password"
+WORKGROUP="your_workgroup"
+SERVER="network_server"
+SHARE="shared_folder"
+
+# Connect to the network Windows machine and list files
+smbclient -U "${USERNAME}%${PASSWORD}" -W "${WORKGROUP}" -L "${SERVER}"
+
+# Read a specific file from the network Windows machine
+smbclient -U "${USERNAME}%${PASSWORD}" -W "${WORKGROUP}" "//${SERVER}/${SHARE}" -c "get file.txt"
+
+
+
+=====###
+
+
 To unzip a gz file and extract only the text data from .txt files while ignoring other file types, you can use the `tarfile` module in Python. Here's an example:
 
 ```python
