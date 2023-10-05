@@ -1,6 +1,6 @@
 NOTES:
 
-
+Could we upload gz file as data-binary from a remote machine using curl? If so how to process this curl request and get the request gz file data and name and date using flask and unzip gz as buffer and extract txt file buffer and convert to parquet puffer and upload parquet buffer to s3 using Python ?
 ====##
 
 To search files in S3 with subfolder names as dates and filter the parquet files within a specific date range, you can use the boto3 library in Python. Here's an example of how you can achieve this:
