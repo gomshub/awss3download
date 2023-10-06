@@ -1,5 +1,35 @@
 NOTES:
 
+To copy files from one subfolder to another subfolder in the same bucket in Amazon S3 using Python, you can use the boto3 library. Here's an example code snippet that demonstrates how to accomplish this:
+
+```python
+import boto3
+
+def copy_files(source_subfolder, destination_subfolder, bucket_name):
+    s3 = boto3.client('s3')
+    
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=source_subfolder)
+    
+    for file in response['Contents']:
+        key = file['Key']
+        new_key = key.replace(source_subfolder, destination_subfolder)
+        
+        s3.copy_object(
+            Bucket=bucket_name,
+            CopySource={
+                'Bucket': bucket_name,
+                'Key': key
+            },
+            Key=new_key
+        )
+```
+
+In the `copy_files` function, you provide the names of the source subfolder, destination subfolder, and the bucket name as arguments. The function uses the `list_objects_v2` method to retrieve a list of objects in the source subfolder. For each object, it constructs a new key by replacing the source subfolder name with the destination subfolder name. Finally, it uses the `copy_object` method to copy the object to the new key in the same bucket.
+
+You'll need to have the `boto3` library installed and have AWS credentials properly configured for this code to work.
+
+========#
+
 To make a cURL request for uploading files present in remote network Windows machine using the `-F` option via a shell script, you can follow these steps:
 
 1. Install cURL if it is not already installed on your system. You can check if it is installed by running `curl --version` in the terminal. If it not installed, you can it using the package manager for your operating system.
