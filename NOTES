@@ -1,5 +1,34 @@
 NOTES:
 
+
+To copy all the subfolders from one subfolder to another subfolder in the same bucket in Amazon S3 using Python, you can use the `boto3` library. Here's an example code snippet that demonstrates how to accomplish this:
+
+```python
+import boto3
+
+def copy_subfolders(source_subfolder, destination_subfolder, bucket_name):
+    s3 = boto3.client('s3')
+    
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=source_subfolder, Delimiter='/')
+    
+    for folder in response.get('CommonPrefixes', []):
+        folder_name = folder.get('Prefix')
+        new_folder_name = folder_name.replace(source_subfolder, destination_subfolder)
+        
+        s3.put_object(Bucket=bucket_name, Key=new_folder_name)
+        
+        copy_files(folder_name, new_folder_name, bucket_name)
+```
+
+In the `copy_subfolders` function, you provide the names of the source subfolder, destination subfolder, and the bucket name as arguments. The function uses the `list_objects_v2` method with the `Delimiter` parameter set to `'/'` to retrieve a list of subfolders in the source subfolder. For each subfolder, it constructs a new folder name by replacing the source subfolder name with the destination subfolder name. It then uses the `put_object` method to create the new subfolder in the bucket.
+
+After creating the new subfolder, the function calls the `copy_files` function from the previous answer to copy all the files from the source subfolder to the corresponding subfolder in the destination subfolder.
+
+You'll need to have the `boto3` library installed and have AWS credentials properly configured for this code to work.
+
+=====#
+
+
 To copy files from one subfolder to another subfolder in the same bucket in Amazon S3 using Python, you can use the boto3 library. Here's an example code snippet that demonstrates how to accomplish this:
 
 ```python
