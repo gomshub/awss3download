@@ -3,6 +3,80 @@ NOTES:
 python
 import boto3
 import pandas as pd
+import io
+
+def search_files_in_s3(bucket_name, start_date, end_date, field_name):
+    s3 = boto3.client('s3')
+
+    # List objects in the bucket
+    response = s3.list_objects_v2(Bucket=bucket_name)
+
+    # Create a buffer to store the result Parquet file
+    result_buffer = io.BytesIO()
+
+    # Iterate over objects and filter based on dates and file extension
+    for obj in response['Contents']:
+        key = obj['Key']
+        if key.endswith('.parquet'):
+            # Extract the date from the subfolder name
+            subfolder_date = key.split('/')[0]
+            if start_date <= subfolder_date <= end_date:
+                # Download the Parquet file to a buffer
+                parquet_buffer = io.BytesIO()
+                s3.download_fileobj(bucket_name, key, parquet_buffer)
+                parquet_buffer.seek(0)
+
+                # Read Parquet file into a DataFrame
+                df = pd.read_parquet(parquet_buffer)
+
+                # Filter the desired field and write to a result DataFrame
+                result_df = df[df[field_name].notna()]
+
+                # Write the result DataFrame to a Parquet file buffer
+                result_parquet_buffer = io.BytesIO()
+                result_df.to_parquet(result_parquet_buffer, index=False)
+                result_parquet_buffer.seek(0)
+
+                # Convert the result Parquet file buffer to a text buffer
+                result_text_buffer = io.StringIO()
+                result_df.to_csv(result_text_buffer, sep='\t', index=False)
+                result_text_buffer.seek(0)
+
+                # Append the result Parquet file buffer to the overall result buffer
+                result_buffer.write(result_parquet_buffer.getvalue())
+
+                # Clean up the temporary buffers
+                parquet_buffer.close()
+                result_parquet_buffer.close()
+                result_text_buffer.close()
+
+    # Return the content of the result buffer as a text buffer
+    result_buffer.seek(0)
+    return result_buffer.getvalue().decode()
+
+# Example usage
+bucket_name = 'your_bucket_name'
+start_date = '2023-01-01'
+end_date = '2023-01-31'
+field_name = 'desired_field_name'
+
+result_text_buffer = search_files_in_s3(bucket_name, start_date, end_date, field_name)
+
+if result_text_buffer:
+    print("The result Parquet file has been converted to text buffer successfully.")
+    print(result_text_buffer)
+else:
+    print("No matching files found in the specified date range.")
+
+# Clean up the result buffer
+result_buffer.close()
+
+
+=#=#=#=#=#=#=#=#
+
+python
+import boto3
+import pandas as pd
 
 def search_files_in_s3(bucket_name, start_date, end_date, field_name):
     s3 = boto3.client('s3')
