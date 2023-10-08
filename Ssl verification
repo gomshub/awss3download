@@ -9,3 +9,26 @@ This command generates a self-signed certificate and private key using the RSA a
 Make sure to replace `"your-host-url"` with the actual URL or hostname you want to generate the certificate for. The `-subj` option specifies the subject of the certificate, including the common name (CN) field.
 
 Note that a self-signed certificate should only be used for testing or development purposes. For production use, it's recommended to obtain a certificate from a trusted certificate authority (CA).
+
+
+=====##
+
+python
+import ssl
+
+# Path to the PEM file
+pem_file = '/path/to/certificate.pem'
+
+# Load the PEM file
+context = ssl.create_default_context(cafile=pem_file)
+
+# Connect to the server using the context
+# For example, if you're using the requests library:
+import requests
+response = requests.get('https://example.com', verify=pem_file)
+
+# Check the validation result
+if response.ok:
+    print("Certificate chain is valid.")
+else:
+    print("Certificate chain is not valid.")
