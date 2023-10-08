@@ -32,3 +32,39 @@ if response.ok:
     print("Certificate chain is valid.")
 else:
     print("Certificate chain is not valid.")
+
+
+====###
+
+python
+import urllib.request
+import ssl
+
+# Create a context with certificate validation
+context = ssl.create_default_context()
+
+# Set the verification parameters for the context
+context.check_hostname = True
+context.verify_mode = ssl.CERT_REQUIRED
+
+# Make sure to provide the path to the certificate PEM file
+pem_file = '/path/to/certificate.pem'
+
+# Create an HTTPSHandler with the custom context
+https_handler = urllib.request.HTTPSHandler(context=context)
+
+# Create an opener with the HTTPSHandler
+opener = urllib.request.build_opener(https_handler)
+
+# Install the opener as the default
+urllib.request.install_opener(opener)
+
+# Now, you can make requests using urllib.request and the certificate will be validated
+response = urllib.request.urlopen('https://example.com')
+
+# Check the validation result
+if response.status == 200:
+    print("Certificate is valid.")
+else:
+    print("Certificate is not valid.")
+
