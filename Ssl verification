@@ -1,3 +1,38 @@
+
+
+
+how to set ca path on open ssl before generating key ?
+
+To set the CApath in OpenSSL before generating a key, you can use the `openssl.conf` configuration file to specify the CApath location. Here's how you can do it:
+
+1. Locate the OpenSSL configuration file: The OpenSSL configuration file is typically named `openssl.cnf` or `openssl.conf`. The location of this file depends on your operating system and OpenSSL installation. Common locations include `/etc/ssl/openssl.cnf`, `/usr/local/ssl/openssl.cnf`, or `C:\OpenSSL\bin\openssl.cfg` on Windows.
+
+2. Open the OpenSSL configuration file in a text editor.
+
+3. Find the `[CA_default]` section: Inside the configuration file, look for the `[CA_default]` section. This section contains various default settings for the CA.
+
+4. Add or modify the `CAPATH` directive: If the `CAPATH` directive already exists in the `[CA_default]` section, modify its value to the desired CApath location. If it doesn't exist, add a new line with the `CAPATH` directive followed by the desired path. For example:
+
+   ```
+   CAPATH = /path/to/CApath
+   ```
+
+   Replace `/path/to/CApath` with the actual path to your CApath directory.
+
+5. Save the changes to the OpenSSL configuration file.
+
+6. Generate a key: After setting the CApath, you can generate a key using OpenSSL as usual. For example:
+
+   ```bash
+   openssl genpkey -algorithm RSA -out private.key
+   ```
+
+   This command will generate a private key using the specified CApath.
+
+By setting the CApath in the OpenSSL configuration file, you ensure that OpenSSL uses the specified CApath for any operations that require CA verification, including key generation.
+=#=#=#==#===#=
+
+
 To generate a CRT chain and key for a host URL, you can use the `openssl` command-line tool. Here's an example of how you can generate a self-signed certificate chain (CRT) and private key for a host URL:
 
 ```shell
