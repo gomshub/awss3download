@@ -1,6 +1,60 @@
 
 
 
+To perform SSL validation in Python using `urllib` with certificate (crt) and key files, you can utilize the `ssl` module along with `urllib.request`. Here's an example of how to do it:
+
+```python
+import urllib.request
+import ssl
+
+# Path to the certificate file (.crt)
+cert_file = '/path/to/certificate.crt'
+
+# Path to the private key file (.key)
+key_file = '/path/to/private_key.key'
+
+# Create an SSL context
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+context.load_cert_chain(certfile=cert_file, keyfile=key_file)
+
+# URL to make the request to
+url = 'https://example.com'
+
+# Make a request with SSL validation
+response = urllib.request.urlopen(url, context=context)
+
+# Read the response
+data = response.read()
+print(data)
+```
+
+In the above code, you need to replace `/path/to/certificate.crt` with the actual path to your certificate file and `/path/to/private_key.key` with the actual path to your private key file.
+
+Here's a breakdown of what this code does:
+
+1. Import the necessary modules: `urllib.request` for making the request and `ssl` for configuring SSL settings.
+
+2. Set the paths to the certificate and private key files in the `cert_file` and `key_file` variables, respectively.
+
+3. Create an SSL context using `ssl.create_default_context()` with the `ssl.Purpose.CLIENT_AUTH` purpose. This sets up the context with default SSL settings for client authentication.
+
+4. Load the certificate and private key into the context using `context.load_cert_chain(certfile=cert_file, keyfile=key_file)`.
+
+5. Specify the URL you want to request in the `url` variable.
+
+6. Make the request using `urllib.request.urlopen(url, context=context)`. Pass the SSL context as the `context` parameter to enable SSL validation.
+
+7. Read the response data using `response.read()`.
+
+8. Finally, print or process the response data as needed.
+
+With this code, `urllib` will use the provided certificate and private key files for SSL/TLS communication and validate the server's certificate accordingly.
+
+
+=#=#=#=#=#=#=########
+
+
+
 how to set ca path on open ssl before generating key ?
 
 To set the CApath in OpenSSL before generating a key, you can use the `openssl.conf` configuration file to specify the CApath location. Here's how you can do it:
