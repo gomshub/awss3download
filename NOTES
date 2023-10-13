@@ -1,6 +1,51 @@
 NOTES:
+python
+import pyarrow.parquet as pq
+import s3fs
+import pyarrow as pa
 
+# Define the S3 bucket and the value you want to search for
+bucket_name = "your_bucket_name"
+value_to_search = "your_value"
 
+# Create an empty list to store the matched row values
+matched_row_values = []
+
+# Connect to the S3 bucket using s3fs
+s3 = s3fs.S3FileSystem(anon=False)
+
+# Iterate over each Parquet file in the S3 bucket
+for file in s3.glob(f"{bucket_name}/*.parquet"):
+    # Read the Parquet file
+    table = pq.read_table(f"s3://{file}", filesystem=s3)
+    
+    # Convert the table to a Pandas DataFrame
+    df = table.to_pandas()
+    
+    # Find rows matching the value
+    matched_rows = df[df["your_column_name"] == value_to_search]
+    
+    # Get the matched row values as a list of dictionaries
+    matched_row_values.extend(matched_rows.to_dict(orient="records"))
+
+# Convert the list of dictionaries to a PyArrow Table
+table_matched = pa.Table.from_pandas(pd.DataFrame(matched_row_values))
+
+# Create an empty Parquet buffer
+parquet_buffer = pa.BufferOutputStream()
+
+# Append the matched rows to the Parquet buffer
+pq.write_table(table_matched, parquet_buffer, row_group_size=1000)
+
+# Get the final Parquet buffer value
+buffer_value = parquet_buffer.getvalue()
+
+# Do something with the buffer_value, such as saving it to a file or uploading it to another location
+# For example, you can save it to a local file:
+with open("matched_rows.parquet", "wb") as f:
+    f.write(buffer_value.to_pybytes())
+
+==#=#==
 Certainly! Here's an example solution code in Python that demonstrates how you can handle the "Couldn't deserialize thrift: TProtocolException while reading parquet buffer" error when working with Parquet files and Thrift serialization/deserialization:
 
 ```python
