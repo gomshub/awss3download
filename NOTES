@@ -1,4 +1,30 @@
 NOTES:
+
+To save only the matched rows for a lookup value without headers in a Parquet file using Python, you can modify the code as follows:
+
+```python
+import pandas as pd
+import pyarrow.parquet as pq
+
+# Read the Parquet file into a DataFrame
+df = pd.read_parquet('input_file.parquet')
+
+# Define the lookup value
+lookup_value = 'your_lookup_value'
+
+# Filter the DataFrame based on the lookup value
+matched_rows = df[df['column_name'] == lookup_value]
+
+# Save the matched rows without headers to a Parquet file
+matched_rows.to_parquet('output_file.parquet', index=False, header=False)
+```
+
+In this code, after reading the Parquet file into a DataFrame, you define the `lookup_value` variable as the value you want to match against. Then, you filter the DataFrame using `df[df['column_name'] == lookup_value]`, where `'column_name'` should be replaced with the actual name of the column you want to compare with the lookup value. Finally, you save the matched rows without headers to a Parquet file using `to_parquet()` with the `index=False` and `header=False` options.
+
+Make sure to replace `'input_file.parquet'` with the path to your input Parquet file and `'output_file.parquet'` with the desired path for the output Parquet file.
+
+=#
+
 python
 import pyarrow.parquet as pq
 import s3fs
