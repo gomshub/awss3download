@@ -1,5 +1,57 @@
 NOTES:
 
+
+Certainly! Here's an example solution code in Python that demonstrates how you can handle the "Couldn't deserialize thrift: TProtocolException while reading parquet buffer" error when working with Parquet files and Thrift serialization/deserialization:
+
+```python
+import pyarrow.parquet as pq
+import thriftpy2
+
+# Load the Thrift schema
+thrift_schema = thriftpy2.load("path/to/your/thrift/schema.thrift")
+
+# Define the Thrift object class
+ThriftObject = thrift_schema.thrift_object
+
+# Read the Parquet file
+parquet_file = pq.ParquetFile("path/to/your/parquet/file.parquet")
+
+# Iterate over the Parquet file's row groups
+for row_group in range(parquet_file.num_row_groups):
+    # Read a row group
+    table = parquet_file.read_row_group(row_group)
+
+    # Iterate over the rows in the row group
+    for i in range(table.num_rows):
+        # Get the Parquet buffer for the row
+        buffer = table[i].to_pydict()
+
+        try:
+            # Deserialize the Thrift object from the buffer
+            thrift_object = ThriftObject()
+            thrift_object.deserialize(buffer)
+            
+            # Process the deserialized Thrift object
+            # ...
+            
+        except thriftpy2.transport.TTransportException as e:
+            # Handle TProtocolException or other Thrift transport errors
+            print("Thrift deserialization error:", e)
+            
+        except Exception as e:
+            # Handle other exceptions
+            print("Error:", e)
+```
+
+In this example, we assume you have the `pyarrow` and `thriftpy2` libraries installed. Make sure to replace `"path/to/your/thrift/schema.thrift"` with the actual path to your Thrift schema file, and `"path/to/your/parquet/file.parquet"` with the path to your Parquet file.
+
+The code reads the Parquet file row by row, deserializes the Thrift object from each row's buffer, and performs any necessary processing. If a `TProtocolException` or any other Thrift transport exception occurs during deserialization, it will be caught and handled appropriately. Other exceptions will also be caught and can be handled as needed.
+
+Remember to adapt the code based on your specific requirements and the structure of your Thrift schema.
+
+==#=#=#=#
+
+
 python
 import boto3
 import pandas as pd
