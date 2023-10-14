@@ -1,5 +1,69 @@
 NOTES:
 
+Certainly! Here's an example code that searches for a value in all Parquet files in an S3 repository, appends all the matched row values (with headers only for the first matched row), and converts the matched rows to a Pandas DataFrame and then to a Parquet buffer:
+
+```python
+import pyarrow.parquet as pq
+import s3fs
+import pyarrow as pa
+import pandas as pd
+
+# Define the S3 bucket and the value you want to search for
+bucket_name = "your_bucket_name"
+value_to_search = "your_value"
+
+# Create an empty list to store the matched row values
+matched_row_values = []
+
+# Connect to the S3 bucket using s3fs
+s3 = s3fs.S3FileSystem(anon=False)
+
+# Iterate over each Parquet file in the S3 bucket
+for file in s3.glob(f"{bucket_name}/*.parquet"):
+    # Read the Parquet file
+    table = pq.read_table(f"s3://{file}", filesystem=s3)
+    
+    # Convert the table to a Pandas DataFrame
+    df = table.to_pandas()
+    
+    # Find rows matching the value
+    matched_rows = df[df["your_column_name"] == value_to_search]
+    
+    # Append the matched row values (with headers only for the first matched row)
+    if not matched_rows.empty:
+        matched_row_values.append(matched_rows.iloc[0].to_dict())
+        matched_row_values.extend(matched_rows.iloc[1:].to_dict(orient="records"))
+
+# Convert the list of dictionaries to a Pandas DataFrame
+df_matched = pd.DataFrame(matched_row_values)
+
+# Convert the Pandas DataFrame to a PyArrow Table
+table_matched = pa.Table.from_pandas(df_matched)
+
+# Create an empty Parquet buffer
+parquet_buffer = pa.BufferOutputStream()
+
+# Write the table to the Parquet buffer
+pq.write_table(table_matched, parquet_buffer)
+
+# Get the final Parquet buffer value
+buffer_value = parquet_buffer.getvalue()
+
+# Do something with the buffer_value, such as saving it to a file or uploading it to another location
+# For example, you can save it to a local file:
+with open("matched_rows.parquet", "wb") as f:
+    f.write(buffer_value.to_pybytes())
+```
+
+Remember to replace `'your_bucket_name'` with the actual name of your S3 bucket, `'your_value'` with the value you want to search for, and `'your_column_name'` with the name of the column you want to search in.
+
+This code will search for the specified value in all Parquet files within the S3 bucket, append all the matched row values (with headers only for the first matched row), and convert the matched rows to a Pandas DataFrame. Then it converts the Pandas DataFrame to a Parquet buffer using PyArrow. You can choose to save the buffer to a file, upload it to another location, or perform any other desired actions.
+
+
+
+
+						=#=#=#=#=#==#=#=#=
+
 To save only the matched rows for a lookup value without headers in a Parquet file using Python, you can modify the code as follows:
 
 ```python
