@@ -1,5 +1,36 @@
 NOTES:
+example code to remove duplicate rows in parquet file using python
+python
+import pandas as pd
+import pyarrow.parquet as pq
 
+# Read the Parquet file into a DataFrame
+df = pd.read_parquet('input_file.parquet')
+
+# Define the lookup value
+lookup_value = 'your_lookup_value'
+
+# Filter the DataFrame based on the lookup value
+matched_rows = df[df['column_name'] == lookup_value]
+
+# Save the matched rows without headers to a Parquet file
+matched_rows.to_parquet('output_file.parquet', index=False, header=False)
+
+python
+import pandas as pd
+import pyarrow.parquet as pq
+
+# Read the Parquet file into a DataFrame
+df = pd.read_parquet('input_file.parquet')
+
+# Drop duplicate rows
+df = df.drop_duplicates()
+
+# Save the deduplicated DataFrame back to a Parquet file
+df.to_parquet('output_file.parquet', index=False)
+
+
+=#=#=#
 Certainly! Here's an example code that searches for a value in all Parquet files in an S3 repository, appends all the matched row values (with headers only for the first matched row), and converts the matched rows to a Pandas DataFrame and then to a Parquet buffer:
 
 ```python
