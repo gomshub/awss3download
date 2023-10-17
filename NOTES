@@ -1,4 +1,31 @@
 NOTES:
+
+look for all the subfolder name like reg expression „name*“    in s3 using python
+python
+import boto3
+import re
+
+# Create an S3 client
+s3 = boto3.client('s3')
+
+# Specify the bucket name
+bucket_name = 'your_bucket_name'
+
+# Compile the regular expression pattern
+pattern = re.compile(r'name.*')
+
+# List objects in the bucket
+response = s3.list_objects_v2(Bucket=bucket_name, Delimiter='/')
+
+# Extract the subfolder names matching the pattern
+subfolder_names = [obj['Prefix'] for obj in response.get('CommonPrefixes', []) if pattern.match(obj['Prefix'])]
+
+# Print the subfolder names
+for subfolder_name in subfolder_names:
+    print(subfolder_name)
+
+
+						=#=#=#=#=
 example code to remove duplicate rows in parquet file using python
 python
 import pandas as pd
