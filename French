@@ -1,5 +1,47 @@
 
 
+
+Certainly! To get the absolute element path and element number/position using the `et` library in Python, you can use the `ElementPath` module. Here's an example code:
+
+```python
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import ElementPath
+
+# Example XML data
+xml_data = '''
+<root>
+    <element1>
+        <subelement1>Value 1</subelement1>
+        <subelement2>Value 2</subelement2>
+    </element1>
+    <element2>
+        <subelement3>Value 3</subelement3>
+    </element2>
+</root>
+'''
+
+# Parse the XML data
+root = ET.fromstring(xml_data)
+
+# Find all elements in the XML
+elements = list(root.iter())
+
+# Get the absolute element path and element number/position for each element
+for element in elements:
+    absolute_path = ElementPath.getpath(element)
+    element_number = elements.index(element) + 1
+    print(f"Element: {element.tag}")
+    print(f"Absolute Path: {absolute_path}")
+    print(f"Element Number: {element_number}")
+    print()
+```
+
+This code will output the element tag, its absolute path, and its element number/position. You can modify the `xml_data` variable to use your own XML data.
+
+
+
+
+
 python
 import xml.etree.ElementTree as ET
 
