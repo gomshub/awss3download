@@ -1,4 +1,35 @@
 
+
+python
+import xml.etree.ElementTree as ET
+
+def get_element_value(xml_root, element_path, element_number):
+    elements = xml_root.iterfind(element_path)
+    for _ in range(element_number):
+        element = next(elements, None)
+        if element is None:
+            return None
+    if element is not None:
+        return element.text
+    else:
+        return None
+
+# Parse the XML file
+tree = ET.parse('path/to/xml_file.xml')
+root = tree.getroot()
+
+# Define the absolute element path and element number
+element_path = './root/element'  # Absolute path
+element_number = 2
+
+# Get the value of the element
+value = get_element_value(root, element_path, element_number)
+print(value)
+
+
+
+
+
 To retrieve the value of an XML element using the element path and element number with the `xml.etree.ElementTree` module in Python, you can follow these steps:
 
 1. Import the necessary module:
