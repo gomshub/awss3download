@@ -1,5 +1,20 @@
+python
+import ssl
 
+url = "https://www.example.com"  # Replace with the URL of the website you want to retrieve the SSL certificate path from
 
+# Retrieve the SSL certificate information
+cert = ssl.get_server_certificate((url, 443))
+
+# Export the certificate path
+cert_path = "/path/to/certificate.crt"  # Replace with the desired path to save the certificate
+
+with open(cert_path, "w") as file:
+    file.write(cert)
+
+print("SSL certificate exported successfully to:", cert_path)
+
+			=#=#=
 
 To perform SSL validation in Python using `urllib` with certificate (crt) and key files, you can utilize the `ssl` module along with `urllib.request`. Here's an example of how to do it:
 
