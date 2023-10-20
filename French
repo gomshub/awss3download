@@ -1,5 +1,40 @@
 
+To yield the element text of multiple element paths using the Python `etree` module, you can use the following code:
 
+```python
+from lxml import etree
+
+def yield_element_text(xml_string, element_paths):
+    root = etree.fromstring(xml_string)
+    for path in element_paths:
+        elements = root.xpath(path)
+        for element in elements:
+            yield element.text
+
+# Example usage
+xml_string = '''
+<root>
+    <element1>Text 1</element1>
+    <element2>Text 2</element2>
+    <element3>
+        <subelement>Text 3</subelement>
+    </element3>
+</root>
+'''
+
+element_paths = [
+    '/root/element1',
+    '/root/element2',
+    '/root/element3/subelement'
+]
+
+for element_text in yield_element_text(xml_string, element_paths):
+    print(element_text)
+```
+
+This code defines a function `yield_element_text` that takes an XML string and a list of element paths as input. It uses the `lxml` library to parse the XML string and extract the elements specified by the paths. It then yields the text content of each element.
+
+In the example usage, we define an XML string and a list of element paths. We then iterate over the yielded element texts and print them.
 
 Certainly! To get the absolute element path and element number/position using the `et` library in Python, you can use the `ElementPath` module. Here's an example code:
 
