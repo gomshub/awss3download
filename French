@@ -1,4 +1,40 @@
+					
+python
+import xml.etree.ElementTree as ET
 
+# Load the XML file
+tree = ET.parse('your_file.xml')
+root = tree.getroot()
+
+# Find the tags and attribute at the specified indexes
+tag1_index = 1
+tag2_index = 1
+attribute_index = 0
+
+tag1 = root.findall('.//tag1')[tag1_index]
+tag2 = tag1.findall('tag2')[tag2_index]
+attribute_value = tag2[attribute_index].get('@key')
+
+# Print the attribute value
+print(attribute_value)
+
+
+					=#=#=#=
+python
+import xml.etree.ElementTree as ET
+
+# Load the XML file
+tree = ET.parse('your_file.xml')
+
+# Find the value of the tag at the specified index within nested tags
+tag_value = tree.findall('.//tag1')[1].findall('tag2')[1].findall('tag3')[0].text
+
+# Print the tag value
+print(tag_value)
+
+
+
+					=#====#
 
 To find the XML tag value with its [1] position efficiently and then get its child elements and their text using Python, you can use the ElementTree library. Here's an example code snippet that demonstrates this:
 
