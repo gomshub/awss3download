@@ -1,3 +1,23 @@
+
+python
+import sys
+import traceback
+
+try:
+    # Your code that may raise an exception
+    raise ValueError("An error occurred")
+except Exception as e:
+    # Get the current exception information
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+
+    # Get the line number where the exception occurred
+    line_number = exc_traceback.tb_lineno
+
+    # Print the exception name and line number
+    print(f"Exception: {exc_type.__name__}, Line: {line_number}")
+
+
+=#=#=#
 					
 python
 import xml.etree.ElementTree as ET
