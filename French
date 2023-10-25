@@ -1,6 +1,30 @@
 
 python
 import sys
+import linecache
+
+try:
+    # Your code that may raise an exception
+    raise ValueError("An error occurred")
+except Exception as e:
+    # Get the current exception information
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+
+    # Get the line number where the exception occurred
+    line_number = exc_traceback.tb_lineno
+
+    # Get the line of code where the exception occurred
+    filename = exc_traceback.tb_frame.f_code.co_filename
+    line = linecache.getline(filename, line_number).strip()
+
+    # Print the exception name, line number, and line of code
+    print(f"Exception: {exc_type.__name__}, Line: {line_number}")
+    print(f"Line of Code: {line}")
+
+=#=#=#=#
+
+python
+import sys
 import traceback
 
 try:
