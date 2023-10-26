@@ -1,5 +1,15 @@
 
 python
+string = "Hello, world!"
+char = 'o'
+n = 2
+
+nth_occurrence = next((i for i, c in enumerate(string) if c == char), None) if n > 0 else None
+
+
+		=#=#=
+
+python
 import sys
 import linecache
 
