@@ -1,4 +1,14 @@
 
+
+python
+string = "Hello, world!"
+char = 'o'
+n = 2
+
+nth_occurrence_index = [i for i, c in enumerate(string) if c == char][n - 1] if n > 0 else -1
+
+
+
 python
 string = "Hello, world!"
 char = 'o'
