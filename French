@@ -1,5 +1,16 @@
 
 
+sql
+SELECT table_name, num_rows
+FROM dba_tables
+WHERE owner = 'your_schema'
+ORDER BY num_rows DESC
+FETCH FIRST 1 ROW ONLY;
+
+
+
+=#=#=#
+
 python
 import snowflake.connector
 
