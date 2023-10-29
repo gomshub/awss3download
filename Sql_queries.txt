@@ -1,0 +1,26 @@
+SQL Queries	
+
+
+
+sql
+DELETE FROM your_table
+WHERE EXTRACT(YEAR FROM your_date_column) = 2023;
+
+sql
+DELETE FROM your_table
+WHERE YEAR(your_date_column) = 2023;
+
+sql
+SELECT COUNT(*)
+FROM your_table
+WHERE YEAR(your_date_column) = 2023;
+
+
+
+sql
+SELECT table_name, num_rows
+FROM dba_tables
+WHERE owner = 'your_schema'
+ORDER BY num_rows DESC
+FETCH FIRST 1 ROW ONLY;
+
