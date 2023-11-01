@@ -1,5 +1,80 @@
 SQL Queries	
 
+To delete rows from all relational tables for a specific year using an SQL procedure, you can use dynamic SQL to generate and execute the necessary DELETE statements. Here's an example:
+
+```sql
+CREATE PROCEDURE DeleteRowsByYear (@targetYear INT)
+AS
+BEGIN
+    DECLARE @tableName NVARCHAR(128);
+    DECLARE @sql NVARCHAR(MAX);
+
+    -- Cursor to loop through all tables in the database
+    DECLARE tableCursor CURSOR FOR
+    SELECT TABLE_NAME
+    FROM INFORMATION_SCHEMA.TABLES
+    WHERE TABLE_TYPE = 'BASE TABLE';
+
+    -- Temporary table to store the DELETE statements
+    CREATE TABLE #DeleteStatements
+    (
+        Statement NVARCHAR(MAX)
+    );
+
+    OPEN tableCursor;
+    FETCH NEXT FROM tableCursor INTO @tableName;
+
+    -- Loop through each table and generate DELETE statements
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        SET @sql = N'DELETE FROM ' + QUOTENAME(@tableName) + N' WHERE YEAR(order_date) = @targetYear;';
+        INSERT INTO #DeleteStatements (Statement) VALUES (@sql);
+
+        FETCH NEXT FROM tableCursor INTO @tableName;
+    END;
+
+    CLOSE tableCursor;
+    DEALLOCATE tableCursor;
+
+    -- Execute the generated DELETE statements
+    DECLARE @deleteSql NVARCHAR(MAX);
+    DECLARE deleteCursor CURSOR FOR SELECT Statement FROM #DeleteStatements;
+
+    OPEN deleteCursor;
+    FETCH NEXT FROM deleteCursor INTO @deleteSql;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        EXEC sp_executesql @deleteSql, N'@targetYear INT', @targetYear;
+
+        FETCH NEXT FROM deleteCursor INTO @deleteSql;
+    END;
+
+    CLOSE deleteCursor;
+    DEALLOCATE deleteCursor;
+
+    -- Clean up temporary table
+    DROP TABLE #DeleteStatements;
+END;
+```
+
+In this example, the procedure loops through all the base tables in the database using a cursor. For each table, it generates a dynamic DELETE statement based on the table name and the year condition. The generated DELETE statements are stored in a temporary table. Finally, the procedure executes each DELETE statement using another cursor.
+
+To use this procedure, you can call it by passing the desired year as an argument:
+
+```sql
+EXEC DeleteRowsByYear @targetYear = 2022;
+```
+
+This will generate and execute DELETE statements for all the base tables in the database, deleting rows where the specified year condition is met.
+
+Please note that this example assumes that the tables have a column named `order_date` that represents the date or year information. You may need to modify the code to match your specific table structure and column names. Also, be cautious when executing such a procedure as it will delete data from all tables, so make sure to have proper backups and test it thoroughly before running it in a production environment.
+
+
+
+
+	=#=#=#=
+
 To delete rows for certain years in multiple tables efficiently using an SQL procedure, you can follow these steps:
 
 1. Create an SQL procedure that performs the deletion operations for each table. The procedure should accept the year as a parameter.
