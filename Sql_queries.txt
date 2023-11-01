@@ -1,5 +1,36 @@
 SQL Queries	
 
+To delete rows for certain years in multiple tables efficiently using an SQL procedure, you can follow these steps:
+
+1. Create an SQL procedure that performs the deletion operations for each table. The procedure should accept the year as a parameter.
+
+2. Identify the tables that contain the data you want to delete rows from.
+
+3. Determine the condition for selecting rows based on the specific year you want to delete. For example, if you want to delete rows for the year 2022, the condition could be something like `YEAR(date_column) = 2022`.
+
+4. Write an SQL DELETE statement for each table within the procedure, specifying the condition to delete rows for the desired year. Here's an example:
+
+   ```sql
+   CREATE PROCEDURE DeleteRowsForYear(year_param INT)
+   BEGIN
+     DELETE FROM table1
+     WHERE YEAR(date_column) = year_param;
+     
+     DELETE FROM table2
+     WHERE YEAR(date_column) = year_param;
+     
+     -- Repeat the DELETE statement for each table you identified
+   END;
+   ```
+
+   Repeat the DELETE statement for each table you identified in step 2, ensuring that you adjust the table name and the condition accordingly.
+
+5. Execute the SQL procedure by passing the desired year as a parameter. This will trigger the deletion of rows for that year in multiple tables.
+
+By using an SQL procedure, you can execute the delete statements for multiple tables sequentially within a single procedure call. However, keep in mind that this approach performs the deletions sequentially rather than in parallel. If you want to execute the delete operations in parallel, you may need to employ other techniques specific to your database system, such as using multiple database connections or threads to execute the procedure concurrently.
+
+
+
 
 
 sql
