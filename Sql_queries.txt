@@ -1,6 +1,14 @@
 SQL Queries	
 
 sql
+SELECT COUNT(*) AS row_count, SUM(bytes) AS table_size
+FROM all_tables
+WHERE owner = 'your_schema_name' AND table_name = 'your_table_name';
+
+
+=#=#=#
+
+sql
 SELECT table_name, ROUND((num_rows * avg_row_len)/1024/1024, 2) AS size_mb
 FROM all_tables
 WHERE owner = 'your_schema_name'
