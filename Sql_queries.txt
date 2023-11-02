@@ -1,5 +1,15 @@
 SQL Queries	
 
+sql
+SELECT table_name, ROUND((num_rows * avg_row_len)/1024/1024, 2) AS size_mb
+FROM all_tables
+WHERE owner = 'your_schema_name'
+ORDER BY size_mb DESC;
+
+
+=#=#=#=
+
+
 To delete rows from all relational tables for a specific year using an SQL procedure, you can use dynamic SQL to generate and execute the necessary DELETE statements. Here's an example:
 
 ```sql
