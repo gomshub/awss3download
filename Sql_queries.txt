@@ -1,5 +1,13 @@
 SQL Queries	
 
+
+sql
+SELECT *
+FROM your_table
+WHERE TO_CHAR(date_column, 'YY') = '17';
+
+
+
 sql
 SELECT *
 FROM your_table
