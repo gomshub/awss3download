@@ -1,5 +1,11 @@
 SQL Queries	
 
+sql
+SELECT *
+FROM your_table
+WHERE EXTRACT(YEAR FROM date_column) LIKE '%YY';
+
+
 
 Certainly! To efficiently delete rows of a particular year in a large table in Oracle DB, you can use subsets or cursor-based approach. Here's an example of both methods:
 
