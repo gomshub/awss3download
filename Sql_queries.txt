@@ -1,5 +1,36 @@
 SQL Queries	
 
+
+Certainly! To efficiently delete rows of a particular year in a large table in Oracle DB, you can use subsets or cursor-based approach. Here's an example of both methods:
+
+Using Subsets:
+```sql
+DELETE FROM your_table
+WHERE EXTRACT(YEAR FROM date_column) = 2022;
+```
+In this example, `your_table` is the name of your table, and `date_column` is the column that contains the date you want to filter. Replace these with your actual table and column names. The `EXTRACT(YEAR FROM date_column)` function extracts the year from the date and compares it with the desired year (2022 in this case). This approach directly deletes the matching rows without using cursors.
+
+Using Cursors:
+```sql
+DECLARE
+  CURSOR c1 IS
+    SELECT *
+    FROM your_table
+    WHERE EXTRACT(YEAR FROM date_column) = 2022;
+BEGIN
+  FOR r1 IN c1 LOOP
+    DELETE FROM your_table WHERE CURRENT OF c1;
+  END LOOP;
+  COMMIT;
+END;
+```
+In this example, a cursor named `c1` is defined to select the rows that match the desired year. Then, a loop is used to iterate over each row fetched by the cursor, and the `DELETE` statement is executed for each row using the `CURRENT OF` clause. Finally, the `COMMIT` statement is used to save the changes.
+
+Please note that before running any delete operation, it's essential to have a backup of your data or perform a thorough validation to ensure that you are deleting the correct rows.
+
+=#=#=
+
+
 sql
 SELECT COUNT(*) AS row_count, SUM(bytes) AS table_size
 FROM all_tables
