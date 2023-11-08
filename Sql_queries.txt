@@ -1,5 +1,17 @@
 SQL Queries	
 
+sql
+SELECT t1.column1, t2.column2, t3.column3, ..., t10.column10
+FROM table1 t1
+JOIN table2 t2 ON t1.foreign_key2 = t2.primary_key
+JOIN table3 t3 ON t1.foreign_key3 = t3.primary_key
+...
+JOIN table10 t10 ON t1.foreign_key10 = t10.primary_key
+WHERE t1.foreign_key1 = 'desired_value';
+
+
+
+
 
 sql
 SELECT *
