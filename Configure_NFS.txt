@@ -1,0 +1,48 @@
+When configuring networking for **NFS (Network File System)** storage, there are several considerations to keep in mind. NFS is commonly used for sharing files and directories across a network, and proper configuration ensures reliable and secure access. Here are the steps to configure NFS networking:
+
+1. **Install NFS Server and Client**:
+   - First, ensure that the NFS server and client packages are installed on the relevant systems. You'll need the NFS server on the machine sharing the files and the NFS client on the machines accessing those files.
+
+2. **Configure NFS Exports on the Server**:
+   - Edit the `/etc/exports` file on the NFS server. This file specifies which directories or filesystems are shared and which clients are allowed to access them.
+   - Example entry in `/etc/exports`:
+     ```
+     /shared_directory client1(rw,sync) client2(ro)
+     ```
+     - In this example:
+       - `/shared_directory` is the directory you want to share.
+       - `client1` has read-write (rw) access.
+       - `client2` has read-only (ro) access.
+
+3. **Restart NFS Services**:
+   - After modifying the exports file, restart the NFS server service to apply the changes:
+     ```
+     sudo systemctl restart nfs-server
+     ```
+
+4. **Configure Firewall Rules**:
+   - Ensure that the NFS ports (2049, 111, and others) are open in your firewall. NFS uses these ports for communication.
+   - For example, on Linux with `iptables`:
+     ```
+     sudo iptables -A INPUT -p tcp --dport 2049 -j ACCEPT
+     sudo iptables -A INPUT -p udp --dport 2049 -j ACCEPT
+     ```
+
+5. **Mount NFS Shares on Clients**:
+   - On the client machines, mount the shared NFS directories using the `mount` command:
+     ```
+     sudo mount -t nfs server_ip:/shared_directory /mnt/mount_point
+     ```
+     - Replace `server_ip` with the NFS server's IP address.
+     - `/mnt/mount_point` is the local directory where the NFS share will be mounted.
+
+6. **Test Access and Permissions**:
+   - Verify that clients can access the NFS share and that permissions are correctly set.
+   - Use commands like `showmount -e server_ip` to check exported shares and `df -h` to verify mounted directories.
+
+7. **Automount (Optional)**:
+   - Consider using `autofs` to automatically mount NFS shares when needed. This avoids manual mounting and unmounting.
+
+Remember that security is crucial when configuring NFS. Limit access to trusted clients, use authentication mechanisms (such as Kerberos), and consider using NFSv4 for improved security features.
+
+Keep in mind that these steps provide a high-level overview. Depending on your specific environment and requirements, additional configuration may be necessary. Always consult the official documentation and best practices for your particular NFS implementation.
