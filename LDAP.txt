@@ -1,4 +1,37 @@
 
+To build and push a Docker image to a specific Docker registry using Bamboo, you can follow these general steps:
+
+1. Configure Docker Registry Credentials: In Bamboo, navigate to the administration settings and set up the credentials for your Docker registry. This typically involves providing the registry URL, username, and password.
+
+2. Set Up a Bamboo Plan: Create a Bamboo plan that includes the necessary tasks for building and pushing the Docker image. You can use a script task or a Docker task depending on your requirements.
+
+3. Write the Docker Build and Push Commands: Within your Bamboo plan, write the commands to build and push the Docker image. Here's an example script that you can use as a starting point:
+
+```bash
+# Login to the Docker registry
+docker login -u <username> -p <password> <registry-url>
+
+# Build the Docker image
+docker build -t <image-name>:<tag> <path-to-dockerfile>
+
+# Tag the Docker image for the registry
+docker tag <image-name>:<tag> <registry-url>/<image-name>:<tag>
+
+# Push the Docker image to the registry
+docker push <registry-url>/<image-name>:<tag>
+```
+
+Replace `<username>` and `<password>` with the credentials for your Docker registry, `<registry-url>` with the URL of your registry, `<image-name>` with the desired name of your Docker image, `<tag>` with the version or tag you want to assign to the image, and `<path-to-dockerfile>` with the path to your Dockerfile.
+
+4. Configure the Bamboo Plan: In the Bamboo plan, add a script task or a Docker task, depending on your chosen approach. Specify the script location if using a script task or provide the necessary Docker commands if using a Docker task. Make sure to configure any additional options or parameters as needed.
+
+5. Run the Bamboo Plan: Save and run the Bamboo plan. Bamboo will execute the tasks and build and push your Docker image to the specified registry.
+
+Please note that the specific steps and configuration may vary depending on your Bamboo setup and the version you are using. Refer to the Bamboo documentation or consult your team's Bamboo administrators for more detailed instructions tailored to your environment.
+
+
+====#=#=#
+
 To build and push a Docker image to a specific Docker registry using the built-in "Build Docker Image" task in Bamboo, you can follow these steps:
 
 1. Configure Docker Registry Credentials: In Bamboo, navigate to the administration settings and set up the credentials for your Docker registry. This typically involves providing the registry URL, username, and password.
