@@ -1,4 +1,42 @@
 
+To build and push a Docker image to a specific Docker registry using the built-in "Build Docker Image" task in Bamboo, you can follow these steps:
+
+1. Configure Docker Registry Credentials: In Bamboo, navigate to the administration settings and set up the credentials for your Docker registry. This typically involves providing the registry URL, username, and password.
+
+2. Set Up a Bamboo Plan: Create a Bamboo plan and add a new stage to it.
+
+3. Add the "Build Docker Image" Task: Within the stage, add the "Build Docker Image" task from the available tasks. This task is provided by the "Docker Integration for Bamboo" plugin.
+
+4. Configure the "Build Docker Image" Task: Configure the task with the following information:
+
+   - **Docker Image Name**: Specify the desired name for your Docker image.
+   - **Dockerfile**: Provide the path to your Dockerfile.
+   - **Context Path**: Specify the context path where your Dockerfile and application files reside.
+   - **Registry**: Select the registry you previously configured in Bamboo.
+   - **Tag**: Specify the version or tag for your Docker image.
+   - **Authentication**: Choose the Docker registry authentication method, such as "Username and Password" or "Bearer Token".
+   - **Build Context**: Select whether to use the Bamboo working directory or a custom directory as the build context.
+
+5. Save and Run the Bamboo Plan: Save the Bamboo plan and run it. The "Build Docker Image" task will execute, building the Docker image and pushing it to the specified registry.
+
+Note: The exact configuration options and steps may vary depending on the version of Bamboo and the "Docker Integration for Bamboo" plugin you are using. Refer to the plugin documentation or consult your Bamboo administrators for more detailed instructions tailored to your specific environment.
+
+Example:
+Here's an example configuration for the "Build Docker Image" task:
+
+- Docker Image Name: myapp
+- Dockerfile: /path/to/Dockerfile
+- Context Path: /path/to/application
+- Registry: myregistry.example.com
+- Tag: 1.0.0
+- Authentication: Username and Password
+- Build Context: Bamboo Working Directory
+
+This configuration will build the Docker image using the provided Dockerfile and application files, tag it as "myapp:1.0.0", and push it to the "myregistry.example.com" registry using the provided credentials.
+
+
+
+
 LDAP 
 
 =#=#=#
