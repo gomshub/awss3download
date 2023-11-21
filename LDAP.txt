@@ -1,4 +1,43 @@
+								
+To pull a Docker image from one Artifactory registry and push it to a different registry using the Docker CLI, you can follow these steps:
 
+1. Install Docker: Ensure that you have Docker installed on your local machine or the environment where you'll be running the commands.
+
+2. Pull the Docker Image from Artifactory: Use the Docker CLI to pull the image from the source Artifactory registry. Run the following command:
+
+   ```bash
+   docker pull <source-registry>/<image-name>:<tag>
+   ```
+
+   Replace `<source-registry>` with the URL or hostname of the source Artifactory registry, `<image-name>` with the name of the Docker image, and `<tag>` with the specific version or tag of the image you want to pull.
+
+3. Tag the Docker Image for the New Registry: After pulling the image, tag it with the new registry's URL or hostname. Run the following command:
+
+   ```bash
+   docker tag <source-registry>/<image-name>:<tag> <new-registry>/<image-name>:<tag>
+   ```
+
+   Replace `<source-registry>` with the URL or hostname of the source Artifactory registry, `<image-name>` with the name of the Docker image, `<tag>` with the specific version or tag of the image, and `<new-registry>` with the URL or hostname of the new registry to which you want to push the image.
+
+4. Log in to the New Registry: Log in to the new registry using the appropriate credentials. Run the following command:
+
+   ```bash
+   docker login -u <username> -p <password> <new-registry>
+   ```
+
+   Replace `<username>` and `<password>` with your credentials for the new registry, and `<new-registry>` with the URL or hostname of the new registry.
+
+5. Push the Docker Image to the New Registry: Once logged in, use the Docker CLI to push the tagged image to the new registry. Run the following command:
+
+   ```bash
+   docker push <new-registry>/<image-name>:<tag>
+   ```
+
+   Replace `<new-registry>` with the URL or hostname of the new registry, `<image-name>` with the name of the Docker image, and `<tag>` with the specific version or tag of the image.
+
+By following these steps, you can pull a Docker image from one Artifactory registry and push it to a different registry using the Docker CLI. Remember to replace the placeholder values with your actual registry URLs, image names, tags, and credentials.
+
+				=#=#==
 To build and push a Docker image to a specific Docker registry using Bamboo, you can follow these general steps:
 
 1. Configure Docker Registry Credentials: In Bamboo, navigate to the administration settings and set up the credentials for your Docker registry. This typically involves providing the registry URL, username, and password.
