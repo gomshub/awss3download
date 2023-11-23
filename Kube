@@ -1,0 +1,19 @@
+In the `docker run` command, `-v` and `-w` are options used to configure volume mounts and the working directory inside the container, respectively. Here's what each option does:
+
+1. `-v` (or `--volume`): This option is used to mount a host directory or a named volume into the container. It allows you to share files and directories between the host system and the container. The syntax for the `-v` option is as follows:
+
+   ```shell
+   docker run -v <host-path>:<container-path> ...
+   ```
+
+   `<host-path>` represents the path on the host system, and `<container-path>` represents the path inside the container where the volume will be mounted. By using this option, you can provide access to specific files or directories to the container.
+
+2. `-w` (or `--workdir`): This option is used to set the working directory inside the container. The working directory is the directory from which commands inside the container are executed. The syntax for the `-w` option is as follows:
+
+   ```shell
+   docker run -w <working-directory> ...
+   ```
+
+   `<working-directory>` represents the path to the desired working directory inside the container. By default, the working directory is set to the container's root directory ("/"). Using the `-w` option allows you to change the working directory to a specific location, which can be useful for executing commands or referencing files within the container.
+
+By using `-v` and `-w` options in the `docker run` command, you can control volume mounts and the working directory of the container, enabling file sharing and specifying the context for command execution, respectively.
