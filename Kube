@@ -1,4 +1,46 @@
 
+To push a Helm chart to a Kubernetes cluster via Argo CD using a GitLab CI/CD pipeline, you can use a GitLab CI configuration file (`.gitlab-ci.yml`). Here's an example of how you can set it up:
+
+```yaml
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image:
+    name: argoproj/argocd-cli:v2.2.2
+    entrypoint:
+      - '/bin/sh'
+      - '-c'
+  script:
+    - argocd login --insecure --username <ARGOCD_USERNAME> --password <ARGOCD_PASSWORD> --server <ARGOCD_SERVER>
+    - argocd app create <APP_NAME> --repo <REPO_URL> --path <CHART_PATH> --dest-namespace <NAMESPACE> --dest-server <KUBE_SERVER> --helm-set environment=<ENVIRONMENT> --helm-set replicaCount=<REPLICA_COUNT> --helm-set image.repository=<IMAGE_REPOSITORY> --helm-set image.tag=<IMAGE_TAG> --sync-policy automated
+    - argocd app sync <APP_NAME> --wait
+
+```
+
+Replace the placeholders with the appropriate values:
+- `<ARGOCD_USERNAME>`: The username for Argo CD authentication.
+- `<ARGOCD_PASSWORD>`: The password for Argo CD authentication.
+- `<ARGOCD_SERVER>`: The URL of the Argo CD server.
+- `<APP_NAME>`: The name of the application in Argo CD.
+- `<REPO_URL>`: The URL of the Git repository where your Helm chart is located.
+- `<CHART_PATH>`: The path inside the repository where your Helm chart resides.
+- `<NAMESPACE>`: The namespace where you want to deploy the application.
+- `<KUBE_SERVER>`: The URL of the Kubernetes API server.
+- `<ENVIRONMENT>`: The environment you want to deploy to (e.g., `production`, `staging`).
+- `<REPLICA_COUNT>`: The desired number of replicas for the deployment.
+- `<IMAGE_REPOSITORY>`: The repository where the container image is hosted.
+- `<IMAGE_TAG>`: The tag of the container image.
+
+This GitLab CI configuration sets up a deployment stage with a job called `deploy`. The job uses the `argoproj/argocd-cli` Docker image, which provides the Argo CD CLI.
+
+The job script logs into Argo CD, creates an application using `argocd app create`, and sets the necessary values for the Helm chart using `--helm-set`. Finally, it triggers a synchronization (`argocd app sync`) and waits for the deployment to complete (`--wait`).
+
+By configuring your GitLab CI pipeline with this example, you can automate the deployment of your Helm chart to a Kubernetes cluster via Argo CD.
+
+=####=
+
 To push a Helm chart, including the environment-specific values, to Argo CD for deployment to a Kubernetes cluster, you can follow these steps:
 
 1. Make sure you have Argo CD installed and configured to connect to your Kubernetes cluster.
