@@ -1,5 +1,12 @@
 SQL Queries	
 
+
+select distinct policy_id from user
+
+select name, role, policy_id from user where policy_id=122
+
+
+=#=#=
 Certainly! Here's an example of a SELECT query that retrieves values from multiple related tables in Oracle DB and displays them in a single row:
 
 ```sql
