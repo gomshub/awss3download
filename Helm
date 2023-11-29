@@ -1,5 +1,41 @@
-helm 3 push to OCI
 
+To parse and increment the major, minor, and patch version numbers in a Helm `Chart.yaml` file using a shell script, you can use regular expressions and string manipulation. Here's an example script:
+
+```bash
+#!/bin/bash
+
+# Set the path to your Chart.yaml file
+CHART_FILE="path/to/Chart.yaml"
+
+# Get the current version number
+CURRENT_VERSION=$(grep -m1 "^version:" "$CHART_FILE" | awk '{print $2}')
+
+# Extract major, minor, and patch versions
+MAJOR_VERSION=$(echo "$CURRENT_VERSION" | awk -F"." '{print $1}')
+MINOR_VERSION=$(echo "$CURRENT_VERSION" | awk -F"." '{print $2}')
+PATCH_VERSION=$(echo "$CURRENT_VERSION" | awk -F"." '{print $3}')
+
+# Increment the patch version
+PATCH_VERSION=$((PATCH_VERSION + 1))
+
+# Update the version number
+NEW_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
+
+# Replace the old version with the new version in Chart.yaml
+sed -i "s/version: $CURRENT_VERSION/version: $NEW_VERSION/" "$CHART_FILE"
+
+# Output the new version number
+echo "New version: $NEW_VERSION"
+```
+
+Make sure to replace `"path/to/Chart.yaml"` with the actual path to your `Chart.yaml` file. When you run this script, it will extract the current version number from the `Chart.yaml` file, increment the patch version by 1, update the file with the new version, and then display the new version number.
+
+This script assumes that the version number in `Chart.yaml` follows the format `MAJOR.MINOR.PATCH`. If your version numbers have a different format, you will need to modify the script accordingly.
+
+
+
+helm 3 push to OCI
+====
 In Helm v3, there is no built-in `helm register` command. The `helm register` command was specific to Helm v2 and was used to register a remote repository. In Helm v3, you can add repositories using the `helm repo add` command.
 
 Regarding the other commands you mentioned, `helm2 package` and `helm2 push` are Helm v2 commands and are not applicable to Helm v3. In Helm v3, you would use different commands and workflows for packaging and pushing charts.
