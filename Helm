@@ -1,4 +1,31 @@
 
+
+Certainly! Here's an example of how you can retrieve the recent version number pushed to a Docker registry using a shell script:
+
+```shell
+#!/bin/bash
+
+# Set the variables for the Docker image name and registry URL
+image_name="your_image_name"
+registry_url="your_registry_url"
+
+# Use the Docker CLI to search for the image in the registry
+search_results=$(docker search $image_name)
+
+# Extract the most recent version number from the search results
+recent_version=$(echo "$search_results" | awk '{print $2}' | grep -E '^([0-9]+\.){2}[0-9]+$' | head -n 1)
+
+# Print the recent version number
+echo "Recent version number: $recent_version"
+```
+
+Make sure to replace `"your_image_name"` with the name of your Docker image, and `"your_registry_url"` with the URL of your Docker registry.
+
+The script uses the `docker search` command to search for the image in the registry and stores the search results in the `search_results` variable. Then, it extracts the most recent version number using `awk`, `grep`, and `head`, and assigns it to the `recent_version` variable. Finally, it prints the recent version number using `echo`.
+
+You can save this script in a file, such as `get_recent_version.sh`, and execute it in the shell to retrieve the recent version number pushed to the Docker registry.
+
+
 To parse and increment the major, minor, and patch version numbers in a Helm `Chart.yaml` file using a shell script, you can use regular expressions and string manipulation. Here's an example script:
 
 ```bash
