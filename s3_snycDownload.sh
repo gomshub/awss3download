@@ -1,5 +1,32 @@
 #!/bin/bash
 
+Certainly! Here's an example of a shell script that uses `grep` to search for a specific word in a text file and prints the matched words alone, consolidating the list:
+
+```bash
+#!/bin/bash
+
+# Input file path
+file="file.txt"
+
+# Word to search for
+search_word="example"
+
+# Output file path
+matched_words="matched_words.txt"
+
+# Search for the word in the file and store the matched words
+grep -o "\b$search_word\b" "$file" | sort | uniq > "$matched_words"
+
+# Print the consolidated list of matched words
+echo "Consolidated list of matched words:"
+cat "$matched_words"
+```
+
+Replace `file.txt` with the actual path to your input file, and `example` with the word you want to search for. The script uses `grep` with the `-o` option to only print the matched word, rather than the whole line. The words are then sorted and duplicates are removed using `sort` and `uniq`. The consolidated list of matched words is stored in the `matched_words.txt` file.
+
+Remember to save the script with a `.sh` extension, for example, `grep_words.sh`. To execute the script, open a terminal, navigate to the directory where the script is saved, and run the command `bash grep_words.sh`.
+
+
 Certainly! Here's an example of a shell script that compares two text files and prints the matched and unmatched words into separate files:
 
 ```bash
