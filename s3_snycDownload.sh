@@ -1,5 +1,37 @@
 #!/bin/bash
 
+Certainly! Here's an example of a shell script that compares two text files and prints the matched and unmatched words into separate files:
+
+```bash
+#!/bin/bash
+
+# Input file paths
+file1="file1.txt"
+file2="file2.txt"
+
+# Output file paths
+matched_words="matched_words.txt"
+unmatched_words="unmatched_words.txt"
+
+# Compare the two files and store the matched and unmatched words
+comm -12 <(tr '[:upper:]' '[:lower:]' < "$file1" | tr -s ' ' '\n' | sort) <(tr '[:upper:]' '[:lower:]' < "$file2" | tr -s ' ' '\n' | sort) > "$matched_words"
+comm -3 <(tr '[:upper:]' '[:lower:]' < "$file1" | tr -s ' ' '\n' | sort) <(tr '[:upper:]' '[:lower:]' < "$file2" | tr -s ' ' '\n' | sort) > "$unmatched_words"
+
+# Print the results
+echo "Matched words:"
+cat "$matched_words"
+echo
+echo "Unmatched words:"
+cat "$unmatched_words"
+```
+
+Make sure to replace the file paths (`file1.txt` and `file2.txt`) with the actual paths to your input files. The script converts the text to lowercase, splits it into separate words, sorts the words, and then uses the `comm` command to compare the sorted word lists. The matched words are stored in the `matched_words.txt` file, and the unmatched words are stored in the `unmatched_words.txt` file.
+
+Remember to save the script with a `.sh` extension, for example, `compare_files.sh`. To execute the script, open a terminal, navigate to the directory where the script is saved, and run the command `bash compare_files.sh`.
+
+
+
+
 # Set your AWS access key and secret access key
 AWS_ACCESS_KEY_ID="your-access-key"
 AWS_SECRET_ACCESS_KEY="your-secret-access-key"
