@@ -1,6 +1,67 @@
 SQL Queries	
 
 
+to append prefix:
+
+To update a field value on a table with a prefix using Oracle SQL, you can use the `UPDATE` statement with the `CONCAT` function to concatenate the prefix with the existing field value. Here's an example:
+
+Let's say you have a table called `employees` with the following structure:
+
+| employee_id | first_name | last_name |
+|-------------|------------|-----------|
+| 1           | John       | Doe       |
+| 2           | Jane       | Smith     |
+| 3           | Mark       | Johnson   |
+
+And you want to update the `first_name` column by adding a prefix "Mr." to each first name. You can use the following SQL query:
+
+```sql
+UPDATE employees
+SET first_name = CONCAT('Mr.', first_name);
+```
+
+After running this query, the `employees` table will be updated as follows:
+
+| employee_id | first_name | last_name |
+|-------------|------------|-----------|
+| 1           | Mr. John   | Doe       |
+| 2           | Mr. Jane   | Smith     |
+| 3           | Mr. Mark   | Johnson   |
+
+In this example, the `CONCAT` function is used to concatenate the prefix "Mr." with the existing `first_name` value for each row, and the result is assigned back to the `first_name` column using the `SET` clause in the `UPDATE` statement.
+
+to remove suffix from a field:
+
+To update a field value on a table and remove a suffix using Oracle SQL, you can use the `UPDATE` statement along with the `SUBSTR` and `INSTR` functions. Here's an example:
+
+Let's assume you have a table called `products` with the following structure:
+
+| product_id | product_name     |
+|------------|-----------------|
+| 1          | Apple iPhone Xs  |
+| 2          | Samsung Galaxy S9|
+| 3          | Google Pixel 3   |
+
+Suppose you want to update the `product_name` column by removing the suffix "Xs" from the product names. You can use the following SQL query:
+
+```sql
+UPDATE products
+SET product_name = SUBSTR(product_name, 1, INSTR(product_name, 'Xs') - 1)
+WHERE product_name LIKE '%Xs';
+```
+
+After running this query, the `products` table will be updated as follows:
+
+| product_id | product_name       |
+|------------|-------------------|
+| 1          | Apple iPhone      |
+| 2          | Samsung Galaxy S9 |
+| 3          | Google Pixel 3    |
+
+In this example, the `UPDATE` statement updates the `product_name` column by extracting a substring from the original value. The `SUBSTR` function is used to specify the start position and length of the substring. The `INSTR` function is used to locate the position of the suffix "Xs" within the `product_name` column. The `WHERE` clause filters the rows to only update the ones that contain the suffix "Xs".
+
+
+
 select distinct policy_id from user
 
 select name, role, policy_id from user where policy_id=122
