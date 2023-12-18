@@ -1,5 +1,23 @@
 
 
+shell
+#!/bin/bash
+
+# Space-separated values
+values="apple banana cherry"
+
+# Convert space-separated values to an array
+IFS=' ' read -ra array <<< "$values"
+
+# Iterate through the array using a for loop
+for value in "${array[@]}"
+do
+    echo "$value"
+    # Add your desired actions or commands here
+done
+
+
+
 Certainly! Here's an example of how you can retrieve the recent version number pushed to a Docker registry using a shell script:
 
 ```shell
