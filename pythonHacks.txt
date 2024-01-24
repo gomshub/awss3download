@@ -1,5 +1,42 @@
 python hacks:
 
+convert json response data into csv format in memory and return csv buffer as a file in Python with example code
+
+
+python
+import pandas as pd
+import json
+import io
+
+def convert_json_to_csv(json_data):
+    # Convert JSON to dictionary
+    data_dict = json.loads(json_data)
+
+    # Convert dictionary to DataFrame
+    df = pd.DataFrame(data_dict)
+
+    # Convert DataFrame to CSV in memory
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+
+    # Set the buffer position to the beginning
+    csv_buffer.seek(0)
+
+    # Return the CSV buffer value
+    return csv_buffer.getvalue()
+
+# Example JSON response data
+json_data = '[{"name": "Alice", "age": 25, "city": "New York"}, {"name": "Bob", "age": 30, "city": "San Francisco"}]'
+
+# Call the function and get the CSV buffer value
+csv_buffer_value = convert_json_to_csv(json_data)
+
+# Now you can use csv_buffer_value as needed
+print(csv_buffer_value)
+
+
+
+
 where does the python code file reside in the deployment structure and also require Python code to deploy as flask gunicorn
 In the deployment structure for a Flask application using Gunicorn, you might structure the files as follows:
 
