@@ -10,6 +10,25 @@ python
         'C': [True, False, True, False]
     }
 
+    # Find the length of the shortest list
+    min_length = min(map(len, data.values()))
+
+    # Trim longer lists to match the length of the shortest list
+    trimmed_data = {k: v[:min_length] for k, v in data.items()}
+
+    # Convert trimmed dictionary to DataFrame
+    df = pd.DataFrame(trimmed_data)
+    
+
+python
+    import pandas as pd
+
+    data = {
+        'A': [1, 2, 3],
+        'B': ['a', 'b'],
+        'C': [True, False, True, False]
+    }
+
     # Find the length of the longest list
     max_length = max(map(len, data.values()))
 
