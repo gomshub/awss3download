@@ -1,5 +1,26 @@
 python hacks:
 
+
+python
+    import pandas as pd
+
+    data = {
+        'A': [1, 2, 3],
+        'B': ['a', 'b'],
+        'C': [True, False, True, False]
+    }
+
+    # Find the length of the longest list
+    max_length = max(map(len, data.values()))
+
+    # Pad shorter lists with NaNs
+    padded_data = {k: v + [float('nan')] * (max_length - len(v)) for k, v in data.items()}
+
+    # Convert padded dictionary to DataFrame
+    df = pd.DataFrame(padded_data)
+    
+
+
 convert json response data into csv format in memory and return csv buffer as a file in Python with example code
 
 
