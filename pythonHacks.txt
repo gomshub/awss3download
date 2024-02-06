@@ -1,5 +1,8 @@
 python hacks:
 
+https://github.com/bi3mer/CreateJSONSchema
+
+
 Yes, you can auto-generate a JSON schema from a JSON file using various tools and libraries available in Python.
 
 One popular library for this purpose is "jsonschema" which allows you to infer a JSON schema from a given JSON file. Here's a basic example of how you can accomplish this:
