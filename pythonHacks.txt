@@ -1,6 +1,31 @@
 python hacks:
 
+Certainly! Below is an example using `curl` to generate an access token by making an HTTP POST request with base64-encoded credentials to an OAuth 2.0 token endpoint:
 
+```bash
+#!/bin/bash
+
+username="your_username"
+password="your_password"
+client_id="your_client_id"
+client_secret="your_client_secret"
+token_endpoint="https://example.com/oauth/token"  # Replace with the actual token endpoint
+
+credentials="$username:$password"
+credentials_base64=$(echo -n $credentials | base64)
+
+curl -X POST $token_endpoint \
+-H "Authorization: Basic $credentials_base64" \
+-d "grant_type=password&username=$username&password=$password&client_id=$client_id&client_secret=$client_secret"
+```
+
+Replace `'your_username'`, `'your_password'`, `'your_client_id'`, `'your_client_secret'`, and `'https://example.com/oauth/token'` with the actual username, password, client ID, client secret, and token endpoint provided by Morningstar's API documentation.
+
+When you run this script, it sends a POST request to the token endpoint with the base64-encoded username and password in the `Authorization` header, as well as the other required parameters for obtaining the access token. Upon a successful response, the access token will be included in the response from the server.
+
+
+
+======
 
 Certainly! Here's a simplified example of how you might generate an access token using a username and password by making an HTTP POST request with base64-encoded credentials in Python using the `requests` library:
 
