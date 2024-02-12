@@ -1,5 +1,29 @@
 python hacks:
 
+
+python
+import xmltodict
+
+# Parse XML to dictionary
+with open('data.xml') as xml_file:
+    data_dict = xmltodict.parse(xml_file.read())
+
+# Access data in the dictionary
+print(data_dict['root']['element'])
+
+# To create an XSD schema, you can use the `xmlschema` library
+# Install xmlschema using pip: pip install xmlschema
+import xmlschema
+
+# Create XSD schema from XML
+schema = xmlschema.XMLSchema(data_dict)
+schema_file = 'schema.xsd'
+
+# Save schema to XSD file
+schema.export(schema_file)
+
+
+
 In Python, you can use the `xmlschema` library to generate an XML Schema (XSD) for an XML file. Here's how you can achieve this:
 
 1. Install the `xmlschema` library if you haven't already. You can do this using pip:
