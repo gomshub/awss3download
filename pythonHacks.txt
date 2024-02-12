@@ -1,5 +1,37 @@
 python hacks:
 
+To generate an XSD schema from JSON using Python, you can use the `generateDS` library. Here's a basic example of how you can accomplish this:
+
+1. Install the `generateDS` library if you haven't already:
+   ```
+   pip install generateDS
+   ```
+
+2. Create a Python script, for example, `json_to_xsd.py`, and add the following code:
+
+```python
+from generateDS import generateDS
+
+# Input JSON file
+json_file = "input.json"
+
+# Output XSD file
+xsd_file = "output.xsd"
+
+# Generate XSD schema
+generateDS(option='no_dateTimes', 
+           jsonFileName=json_file, 
+           xsdFileName=xsd_file)
+```
+
+3. Replace `input.json` with the path to your JSON file and `output.xsd` with the desired XSD file path.
+
+4. Run the script, and it will generate an XSD schema based on the JSON structure provided in your input JSON file.
+
+Remember that the `generateDS` library is just one of the available options for generating XSD schemas from JSON in Python. Depending on your specific requirements, you may need to explore other libraries or custom solutions.
+
+#=#=#=#
+
 
 python
 import xmltodict
