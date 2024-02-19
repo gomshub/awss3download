@@ -1,3 +1,34 @@
+
+To generate a PEM file using OpenSSL and use it in a curl request to an HTTPS endpoint, you can follow these steps:
+
+1. **Generate a PEM file using OpenSSL:**
+```bash
+openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+```
+
+2. **Combine the private key and certificate into a single PEM file:**
+```bash
+cat key.pem certificate.pem > cert.pem
+```
+
+3. **Make a curl request to an HTTPS endpoint using the generated PEM file:**
+```bash
+curl -k --key key.pem --cert certificate.pem https://example.com
+```
+
+In this curl command:
+- `-k` is used to allow curl to make insecure connections, which is useful when using self-signed certificates.
+- `--key key.pem` specifies the private key file.
+- `--cert certificate.pem` specifies the certificate file.
+- `https://example.com` is the HTTPS endpoint you want to request.
+
+Make sure to replace `https://example.com` with the actual URL of the HTTPS endpoint you want to communicate with.
+
+
+
+=#=#=#
+
+
 python
 import ssl
 
