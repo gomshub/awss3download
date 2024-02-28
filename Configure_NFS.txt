@@ -1,4 +1,25 @@
 
+Yes, you can achieve this by using default ACLs in Linux. With default ACLs, you can set a default permission set for a directory that will be inherited by files and subdirectories created within it. However, you can still set specific ACL entries for individual groups or users as needed.
+
+Here's how you can set a default ACL for a directory to grant full access to one group while allowing other groups to inherit the default permissions:
+
+1. Set the default ACL for the directory:
+   ```
+   setfacl -d -m g:group1:rwx directory_name
+   ```
+
+   - This command sets the default ACL for group1 to have read, write, and execute permissions on the directory.
+
+2. Set specific ACLs for other groups as needed:
+   ```
+   setfacl -m g:group2:r-x directory_name
+   ```
+
+   - This command sets group2 with read and execute permissions on the directory.
+
+By setting the default ACL for one group and specific ACL entries for other groups, you can achieve the desired permission structure where one group has full access and other groups inherit the default permissions on the directory in Linux.
+
+
 To create a Python service that makes an HTTP request with a Bearer token and headers and then deploy it to Kubernetes, you can follow these steps:
 
 1. **Create the Python Service Code**:
