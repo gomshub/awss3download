@@ -1,3 +1,39 @@
+
+To loop over a list of lines in a text file using a shell script, you can use a `while` loop in combination with the `read` command. Here's an example of how you can achieve this:
+
+```bash
+#!/bin/bash
+
+# Assuming your text file is named "list.txt"
+file="list.txt"
+
+# Check if the file exists
+if [ -f "$file" ]; then
+    while IFS= read -r line; do
+        # Process each line here
+        echo "Processing line: $line"
+    done < "$file"
+else
+    echo "File not found: $file"
+fi
+```
+
+In this script:
+- `while` loop reads each line from the file specified by `file`.
+- `read -r line` reads each line from the file and stores it in the variable `line`.
+- `IFS=` prevents leading/trailing whitespace from being trimmed.
+- `echo "Processing line: $line"` is where you can perform operations on each line. Replace this with your actual processing logic.
+
+Remember to replace `"list.txt"` with the actual path to your text file. This script will read each line from the file and process it as needed.
+
+
+
+
+
+=#=#=#=
+
+
+
 To check if an HTTP response shows that a session is not valid and renew the session using a shell script, you can use tools like cURL and jq (a lightweight and flexible command-line JSON processor). Here's a general outline of how you can achieve this:
 
 1. Make an HTTP request to check the session validity using cURL and save the response to a file:
