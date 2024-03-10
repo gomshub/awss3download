@@ -1,0 +1,23 @@
+
+
+To search for the "I 23/3/2024" pattern only in the `server.logs` file generated on 23/3/2024, remove duplicates, and store the output in a new file, you can use the following command:
+
+```bash
+grep -h "I 23/3/2024" $(find /path/to/logs/directory -name "server.logs" -newermt "2024-03-23" ! -newermt "2024-03-24") | sed 's/^I 23\/3\/2024//' | sort -u > output_file.txt | sort -u -o output_file.txt output_file.txt
+
+```
+
+In this updated command:
+- `grep -h "I 23/3/2024" $(find /path/to/logs/directory -name "server.logs" -newermt "2024-03-23" ! -newermt "2024-03-24")` searches for lines starting with "I 23/3/2024" in the identified `server.logs` file.
+- `sed 's/^I 23\/3\/2024//'` removes the date from the matched lines.
+- `sort -u` sorts the lines and removes duplicates.
+- `> output_file.txt` stores the unique lines in the `output_file.txt` file.
+
+Yes, you can remove duplicate lines from the output file and overwrite the same file using the following command:
+
+```bash
+sort -u -o output_file.txt output_file.txt
+```
+
+This command will sort the lines in `output_file.txt`, remove duplicates, and then overwrite the original file with the unique lines.
+
