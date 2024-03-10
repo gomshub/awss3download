@@ -21,3 +21,35 @@ sort -u -o output_file.txt output_file.txt
 
 This command will sort the lines in `output_file.txt`, remove duplicates, and then overwrite the original file with the unique lines.
 
+=#=#=#
+
+You can compress files generated between a particular time in Linux using the `find` command in combination with `tar`. Here's an example command that finds files generated between two specific dates and compresses them into a tar archive:
+
+```bash
+find /path/to/directory -type f -newermt 2024-01-01 ! -newermt 2024-02-01 -exec tar -rvf archive.tar {} +
+```
+
+In this command:
+- Replace `/path/to/directory` with the actual directory path you want to search.
+- The dates `2024-01-01` and `2024-02-01` should be adjusted to your specific time range.
+- The `tar` command creates or appends files to the `archive.tar` file.
+  
+After running this command, you'll have a tar archive containing the files generated within the specified time range.
+
+
+
+=#=#=#=#
+
+You can delete huge size files that were generated within a specific time range in Linux using the `find` command along with the `rm` command. Here's an example command to delete files larger than a certain size that were generated between two specific dates:
+
+```bash
+find /path/to/directory -type f -size +100M -newermt 2024-01-01 ! -newermt 2024-02-01 -delete
+```
+
+In this command:
+- Replace `/path/to/directory` with the actual directory path you want to search.
+- Adjust the file size (`+100M` in this example) to your desired threshold.
+- The dates `2024-01-01` and `2024-02-01` should be modified according to your specific time range.
+- The `delete` option at the end of the command will delete the files that meet the criteria.
+
+Please be cautious while using the `delete` option with the `find` command as it permanently removes files without moving them to the trash. Make sure you have backups or are certain about the files you are deleting.
