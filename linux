@@ -1,5 +1,13 @@
 
 
+bash
+grep "^I 23/3/2024" /path/to/server.logs | sed 's/^I 23\/3\/2024//' | sort | uniq -c > output_file.txt
+
+
+
+
+=#=#=#=
+
 To search for the "I 23/3/2024" pattern only in the `server.logs` file generated on 23/3/2024, remove duplicates, and store the output in a new file, you can use the following command:
 
 ```bash
