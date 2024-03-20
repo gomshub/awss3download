@@ -1,0 +1,18 @@
+When setting JVM arguments for a Java process with a VM (Virtual Machine) of 60GB memory, you need to consider how to allocate this memory efficiently. Here are some general guidelines to help you calculate JVM arguments for a process with a 60GB VM:
+
+1. **Heap Size**: 
+   - Allocate a reasonable portion of the total memory to the heap using `-Xms` (initial heap size) and `-Xmx` (maximum heap size) arguments. For a 60GB VM, you could allocate, for example, 80% (48GB) to the heap by setting `-Xms48G -Xmx48G`.
+
+2. **Metaspace/PermGen Size**:
+   - For Java 8 and earlier versions, consider setting the MaxPermSize or MaxMetaspaceSize based on your application's requirements.
+   
+3. **Thread Stack Size**:
+   - Adjust the thread stack size using the `-Xss` option. The default stack size is usually 1MB, but you can increase or decrease it based on your needs.
+
+4. **Garbage Collection**:
+   - Tune garbage collection settings like the garbage collector algorithm, generation sizes, etc., based on your application's memory usage patterns and performance requirements.
+
+5. **Other Considerations**:
+   - Consider other JVM arguments related to performance tuning, such as those for the Just-In-Time (JIT) compiler, class data sharing, etc.
+
+Remember that these are general guidelines, and the optimal JVM arguments for your specific application may vary. It's important to test and monitor the performance of your application with different JVM settings to find the configuration that works best for your use case.
